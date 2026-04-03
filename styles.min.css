@@ -543,7 +543,7 @@ body { counter-reset: section; }
 }
 
 
-.skip-link {
+.skip-to-content {
     position: absolute;
     left: -9999px;
     top: 12px;
@@ -556,7 +556,7 @@ body { counter-reset: section; }
     text-decoration: none;
 }
 
-.skip-link:focus {
+.skip-to-content:focus {
     left: 12px;
 }
 
