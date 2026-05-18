@@ -9,13 +9,19 @@
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Space+Grotesk:wght@300;500;700&display=swap');
 
         :root {
-            --primary: #00f3ff;
-            --secondary: #bc13fe;
-            --bg: #050505;
-            --card-bg: rgba(20, 20, 30, 0.4);
-            --text: #ffffff;
-            --text-muted: #a0a0a0;
-            --border: rgba(255, 255, 255, 0.08);
+            --primary: #2de2e6;
+            --secondary: #ffb347;
+            --bg: #0b0f14;
+            --bg-deep: #07090c;
+            --card-bg: rgba(15, 20, 28, 0.6);
+            --text: #f7f7f2;
+            --text-muted: #a8b3c2;
+            --border: rgba(255, 255, 255, 0.12);
+            --glow: rgba(45, 226, 230, 0.35);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         * {
@@ -27,9 +33,38 @@
 
         body {
             font-family: 'Outfit', sans-serif;
-            background-color: var(--bg);
+            background: radial-gradient(circle at 20% 10%, rgba(45, 226, 230, 0.08), transparent 35%),
+                        radial-gradient(circle at 85% 15%, rgba(255, 179, 71, 0.08), transparent 40%),
+                        linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
             color: var(--text);
             overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 60% 60%, rgba(45, 226, 230, 0.05), transparent 40%);
+            z-index: -3;
+            pointer-events: none;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 48px 48px;
+            opacity: 0.08;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        ::selection {
+            background: rgba(45, 226, 230, 0.3);
+            color: var(--text);
         }
 
         /* Custom Cursor */
@@ -80,9 +115,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, #050505 90%);
+            background: radial-gradient(circle at center, transparent 0%, var(--bg-deep) 90%);
             pointer-events: none;
             z-index: -1;
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 12px var(--glow);
+            z-index: 200;
         }
 
         /* Navigation */
@@ -111,7 +158,7 @@
             text-decoration: none;
             letter-spacing: 1px;
             z-index: 102;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+            text-shadow: 0 0 10px var(--glow);
         }
         .logo span { color: var(--primary); }
         
@@ -145,6 +192,11 @@
         }
         .nav-links a:not(.btn-resume):hover::after { width: 100%; }
         .nav-links a:hover { color: var(--primary); text-shadow: 0 0 8px var(--primary); }
+        .nav-links a.active {
+            color: var(--secondary);
+            text-shadow: 0 0 10px rgba(255, 179, 71, 0.4);
+        }
+        .nav-links a.active::after { width: 100%; background-color: var(--secondary); }
         
         .btn-resume {
             padding: 12px 30px;
@@ -154,13 +206,31 @@
             text-decoration: none;
             font-size: 0.85rem;
             transition: all 0.3s ease;
-            background: rgba(0, 243, 255, 0.02);
+            background: rgba(45, 226, 230, 0.06);
             position: relative;
             overflow: hidden;
         }
         .btn-resume:hover {
-            background: rgba(0, 243, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            background: rgba(45, 226, 230, 0.12);
+            box-shadow: 0 0 20px var(--glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-download {
+            padding: 12px 26px;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 179, 71, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-download:hover {
+            background: rgba(255, 179, 71, 0.16);
+            box-shadow: 0 0 18px rgba(255, 179, 71, 0.35);
             transform: translateY(-2px);
         }
 
@@ -169,6 +239,9 @@
             display: none;
             cursor: pointer;
             z-index: 102;
+            border: none;
+            background: none;
+            padding: 0;
         }
         .bar {
             width: 30px;
@@ -232,6 +305,7 @@
         section {
             padding: 120px 0;
             position: relative;
+            scroll-margin-top: 120px;
         }
 
         h2 {
@@ -261,43 +335,76 @@
         body { counter-reset: section; }
 
         /* Hero Section */
+        #about,
         #hero {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            padding-top: 0;
+            padding-top: 140px;
+            gap: 10px;
         }
         .hero-pre {
             color: var(--primary);
             font-family: 'Space Grotesk';
-            margin-bottom: 25px;
+            margin-bottom: 14px;
             font-size: 1.1rem;
             letter-spacing: 2px;
+        }
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            row-gap: 10px;
+            margin: 8px 0 22px;
+            max-width: 520px;
+        }
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(15, 20, 28, 0.5);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .hero-pill i { color: var(--secondary); }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--secondary);
+            box-shadow: 0 0 10px rgba(255, 179, 71, 0.6);
+            animation: pulse 2.2s infinite;
         }
         .glitch-name {
             font-size: 5.5rem;
             font-weight: 700;
             line-height: 1.1;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
             color: #e0e0e0;
-            text-shadow: 4px 4px 0px rgba(0, 243, 255, 0.1);
+            text-shadow: 4px 4px 0px rgba(45, 226, 230, 0.18);
         }
         .typewriter {
             font-size: 2.5rem;
             color: var(--text-muted);
-            margin-bottom: 30px;
+            margin-bottom: 24px;
             height: 50px;
             font-weight: 700;
         }
-        .typewriter span { color: var(--secondary); text-shadow: 0 0 15px rgba(188, 19, 254, 0.4); }
+        .typewriter span { color: var(--secondary); text-shadow: 0 0 15px rgba(255, 179, 71, 0.45); }
         
         .hero-desc {
             max-width: 540px;
             line-height: 1.7;
-            color: #8892b0;
-            margin-bottom: 50px;
+            color: var(--text-muted);
+            margin-bottom: 36px;
             font-size: 1.1rem;
         }
         .social-links {
@@ -320,8 +427,35 @@
         .social-icon:hover {
             color: var(--primary);
             border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 15px var(--glow);
             transform: translateY(-5px);
+        }
+        .hero-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+        .stat {
+            min-width: 150px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(10, 14, 20, 0.6);
+            box-shadow: inset 0 0 20px rgba(45, 226, 230, 0.05);
+        }
+        .stat-value {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
         }
 
         /* Experience Timeline */
@@ -367,7 +501,7 @@
             font-size: 0.9rem;
             margin-bottom: 8px;
             display: inline-block;
-            border: 1px solid rgba(0, 243, 255, 0.3);
+            border: 1px solid rgba(45, 226, 230, 0.35);
             padding: 2px 10px;
             border-radius: 15px;
         }
@@ -383,7 +517,7 @@
             display: block;
             font-size: 1.1rem;
         }
-        .timeline p { color: #8892b0; line-height: 1.6; }
+        .timeline p { color: var(--text-muted); line-height: 1.6; }
 
         /* Projects Grid */
         .projects-grid {
@@ -391,6 +525,39 @@
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
         }
+        .project-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 0 0 30px;
+        }
+        .filter-chip {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-family: 'Space Grotesk';
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.7rem;
+            transition: 0.3s;
+        }
+        .filter-chip:hover,
+        .filter-chip.active {
+            color: var(--bg);
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 18px var(--glow);
+        }
+        .filter-chip:focus-visible,
+        .back-to-top:focus-visible,
+        .btn-resume:focus-visible,
+        .hamburger:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 3px;
+        }
+        .project-card.is-hidden { display: none; }
         .project-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
@@ -434,7 +601,7 @@
             z-index: 2;
         }
         .project-links a {
-            color: #a8b2d1;
+            color: var(--text-muted);
             font-size: 1.3rem;
             transition: 0.3s;
         }
@@ -444,14 +611,14 @@
             font-size: 1.5rem;
             margin-bottom: 15px;
             font-weight: 700;
-            color: #e6f1ff;
+            color: var(--text);
             transition: 0.3s;
         }
         .project-card:hover .project-title { color: var(--primary); }
         
         .project-desc {
             font-size: 1rem;
-            color: #8892b0;
+            color: var(--text-muted);
             line-height: 1.6;
             margin-bottom: 25px;
         }
@@ -465,7 +632,7 @@
         }
         .tech-tag {
             color: var(--secondary);
-            background: rgba(188, 19, 254, 0.1);
+            background: rgba(255, 179, 71, 0.12);
             padding: 4px 10px;
             border-radius: 15px;
         }
@@ -488,15 +655,48 @@
             align-items: center;
             gap: 10px;
             font-size: 1rem;
-            color: #ccd6f6;
+            color: var(--text);
         }
         .skill-box:hover {
             border-color: var(--primary);
-            background: rgba(0, 243, 255, 0.05);
+            background: rgba(45, 226, 230, 0.08);
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(45, 226, 230, 0.18);
         }
         .skill-box i { color: var(--primary); }
+
+        /* GitHub Activity */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+            margin-bottom: 20px;
+        }
+        .activity-card {
+            padding: 28px 26px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(12, 16, 22, 0.6);
+            box-shadow: inset 0 0 18px rgba(45, 226, 230, 0.05);
+        }
+        .activity-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .activity-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+        .activity-note {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 520px;
+        }
 
         /* Contact */
         #contact {
@@ -504,6 +704,21 @@
             max-width: 600px;
             margin: 0 auto;
             padding-bottom: 150px;
+        }
+        #contact .hero-pre {
+            text-align: center;
+        }
+        #contact .contact-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            justify-content: center;
+            gap: 12px;
+        }
+        #contact .contact-title::after {
+            display: none;
+        }
+        #contact .contact-desc {
+            margin: 0 auto;
         }
         .contact-btn {
             display: inline-block;
@@ -519,12 +734,78 @@
             font-size: 1.1rem;
         }
         .contact-btn:hover {
-            background: rgba(0, 243, 255, 0.1);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            background: rgba(45, 226, 230, 0.12);
+            box-shadow: 0 0 30px rgba(45, 226, 230, 0.2);
             transform: translateY(-5px);
         }
 
+        .back-to-top {
+            position: fixed;
+            right: 28px;
+            bottom: 28px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: rgba(15, 20, 28, 0.7);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: 0.3s;
+            z-index: 150;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+        }
+        .back-to-top:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 18px var(--glow);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 179, 71, 0.6); }
+            70% { transform: scale(1.15); box-shadow: 0 0 0 10px rgba(255, 179, 71, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 179, 71, 0); }
+        }
+
+        body.reduced-motion .cursor,
+        body.reduced-motion .cursor-dot,
+        body.no-custom-cursor .cursor,
+        body.no-custom-cursor .cursor-dot {
+            display: none;
+        }
+        body.reduced-motion .status-dot {
+            animation: none;
+        }
+        body.reduced-motion *,
+        body.no-custom-cursor * {
+            cursor: auto;
+        }
+
         /* Responsive Media Queries */
+        @media (hover: none) and (pointer: coarse) {
+            .cursor, .cursor-dot { display: none; }
+            * { cursor: auto; }
+        }
+        @media (max-width: 1024px) {
+            nav { padding: 20px 32px; }
+            .nav-links { gap: 22px; }
+            .btn-resume, .btn-download { padding: 10px 18px; font-size: 0.75rem; }
+            .btn-download { display: none; }
+
+            #about, #hero { padding-top: 120px; }
+            .glitch-name { font-size: 4rem; }
+            .typewriter { font-size: 2rem; height: 42px; }
+            .hero-desc { font-size: 1rem; }
+        }
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .hamburger { display: block; }
@@ -536,8 +817,12 @@
             .timeline-item { margin-left: 50px; }
             .timeline-item::before { left: -36px; }
             
-            #hero { align-items: flex-start; text-align: left; padding-left: 10px; }
+            #about, #hero { align-items: flex-start; text-align: left; padding-left: 10px; }
             .hero-desc { text-align: left; }
+            .hero-stats { width: 100%; }
+            .stat { flex: 1 1 150px; }
+            .project-filters { justify-content: flex-start; }
+            .back-to-top { right: 18px; bottom: 18px; }
             
             .cursor, .cursor-dot { display: none; } 
             * { cursor: auto; }
@@ -545,9 +830,22 @@
             h2 { font-size: 2.2rem; }
             h2::after { display: none; }
         }
+        @media (max-width: 600px) {
+            #about, #hero { padding-top: 110px; }
+            .hero-badges { max-width: 100%; }
+            .glitch-name { font-size: 2.8rem; }
+            .typewriter { font-size: 1.6rem; height: 36px; }
+            .hero-stats { gap: 12px; }
+            .stat { flex: 1 1 100%; }
+            .project-card { padding: 28px 22px; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .filter-chip { font-size: 0.65rem; padding: 7px 12px; }
+        }
     </style>
 </head>
 <body>
+
+    <div class="scroll-progress"></div>
 
     <!-- Custom Cursor -->
     <div class="cursor"></div>
@@ -558,33 +856,37 @@
     <div class="vignette"></div>
 
     <!-- Navbar -->
-    <nav>
-        <a href="#" class="logo hover-target"></a>
+    <nav aria-label="Primary">
+        <a href="#about" class="logo hover-target">Mayank <span>Raj</span></a>
         
         <!-- Desktop Menu -->
         <ul class="nav-links">
             <li><a href="#about" class="hover-target">About</a></li>
             <li><a href="#experience" class="hover-target">Experience</a></li>
             <li><a href="#projects" class="hover-target">Projects</a></li>
+            <li><a href="#github" class="hover-target">GitHub</a></li>
             <li><a href="#contact" class="hover-target">Contact</a></li>
-            <li><a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" class="btn-resume hover-target" id="resume-btn-desktop" target="_blank">Resume</a></li>
+            <li><a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" class="btn-resume hover-target" id="resume-btn-desktop" target="_blank" rel="noopener">Resume</a></li>
+            <li><a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" class="btn-download hover-target" id="resume-download-desktop" download>Download</a></li>
         </ul>
 
         <!-- Mobile Hamburger -->
-        <div class="hamburger hover-target">
+        <button class="hamburger hover-target" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" type="button">
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>
-        </div>
+        </button>
     </nav>
 
     <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu">
+    <div class="mobile-menu" id="mobile-menu">
         <a href="#about" class="mobile-link">About</a>
         <a href="#experience" class="mobile-link">Experience</a>
         <a href="#projects" class="mobile-link">Projects</a>
+        <a href="#github" class="mobile-link">GitHub</a>
         <a href="#contact" class="mobile-link">Contact</a>
-        <a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" class="btn-resume mobile-link" id="resume-btn-mobile" target="_blank">Resume</a>
+        <a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" class="btn-resume mobile-link" id="resume-btn-mobile" target="_blank" rel="noopener">Resume</a>
+        <a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" class="btn-download mobile-link" id="resume-download-mobile" download>Download CV</a>
     </div>
 
     <main>
@@ -592,10 +894,28 @@
         <section id="about">
             <div class="hero-pre">Hi, my name is</div>
             <h1 class="glitch-name">Mayank Raj</h1>
+            <div class="hero-badges">
+                <div class="hero-pill status-pill"><span class="status-dot"></span> Open to work</div>
+                <div class="hero-pill location-pill"><i class="fas fa-map-marker-alt"></i> Bengaluru, IN</div>
+            </div>
             <div class="typewriter">I build <span id="typing-text"></span></div>
             <p class="hero-desc">
                 I'm a Robotics Engineer and Full Stack Developer specializing in building scalable web applications and intelligent systems. I bridge the gap between hardware and software to create seamless digital experiences.
             </p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value" data-stat="repos">--</span>
+                    <span class="stat-label">Public repos</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" data-stat="stars">--</span>
+                    <span class="stat-label">Total stars</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" data-stat="followers">--</span>
+                    <span class="stat-label">Followers</span>
+                </div>
+            </div>
             <div class="social-links">
                 <a href="#" id="github-hero" class="social-icon hover-target" target="_blank"><i class="fab fa-github"></i></a>
                 <a href="#" id="linkedin-hero" class="social-icon hover-target" target="_blank"><i class="fab fa-linkedin"></i></a>
@@ -631,72 +951,12 @@
         <!-- Projects -->
         <section id="projects">
             <h2>Some Things I've Built</h2>
-            <div class="projects-grid">
-                <!-- Project 1 -->
+            <div class="project-filters" id="project-filters"></div>
+            <div class="projects-grid" id="projects-grid">
                 <div class="project-card hover-target">
-                    <div class="project-links">
-                        <a href="#" id="p1-github" target="_blank"><i class="fab fa-github"></i></a>
-                        <!-- <a href="#" id="p1-link" target="_blank"><i class="fas fa-external-link-alt"></i></a> -->
-                    </div>
                     <i class="far fa-folder folder-icon"></i>
-                    <h3 class="project-title">SaaS Sentry</h3>
-                    <p class="project-desc">A scalable backend API for monitoring cloud resources. Integrates AWS SDK to automate data collection via Cron jobs. Security is handled through a custom authentication system with JWT.</p>
-                    <div class="tech-stack">
-                        <span class="tech-tag">Node.js</span>
-                        <span class="tech-tag">TypeScript</span>
-                        <span class="tech-tag">AWS</span>
-                        <span class="tech-tag">Prisma</span>
-                    </div>
-                </div>
-
-                <!-- Project 2 -->
-                <div class="project-card hover-target">
-                    <div class="project-links">
-                        <a href="#" id="p2-github" target="_blank"><i class="fab fa-github"></i></a>
-                        <!-- <a href="#" id="p2-link" target="_blank"><i class="fas fa-external-link-alt"></i></a> -->
-                    </div>
-                    <i class="far fa-folder folder-icon"></i>
-                    <h3 class="project-title">RAG News Chatbot</h3>
-                    <p class="project-desc">Full-stack AI chatbot using Qdrant vector DB and Google Gemini. Features real-time streaming via Socket.IO and managed session history with Redis.</p>
-                    <div class="tech-stack">
-                        <span class="tech-tag">React</span>
-                        <span class="tech-tag">Socket.IO</span>
-                        <span class="tech-tag">Gemini AI</span>
-                        <span class="tech-tag">Redis</span>
-                    </div>
-                </div>
-
-                <!-- Project 3 -->
-                <div class="project-card hover-target">
-                    <div class="project-links">
-                        <a href="#" id="p3-github" target="_blank"><i class="fab fa-github"></i></a>
-                        <!-- <a href="#" id="p3-link" target="_blank"><i class="fas fa-external-link-alt"></i></a> -->
-                    </div>
-                    <i class="far fa-folder folder-icon"></i>
-                    <h3 class="project-title">ASL Recognition System</h3>
-                    <p class="project-desc">Real-time ASL hand gesture recognition system using a fine-tuned MobileNet model. Built an interactive Streamlit application to handle both image and video inputs.</p>
-                    <div class="tech-stack">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">TensorFlow</span>
-                        <span class="tech-tag">OpenCV</span>
-                        <span class="tech-tag">Streamlit</span>
-                    </div>
-                </div>
-
-                <!-- Project 4 -->
-                <div class="project-card hover-target">
-                    <div class="project-links">
-                        <a href="#" id="p4-github" target="_blank"><i class="fab fa-github"></i></a>
-                        <!-- <a href="#" id="p4-link" target="_blank"><i class="fas fa-external-link-alt"></i></a> -->
-                    </div>
-                    <i class="far fa-folder folder-icon"></i>
-                    <h3 class="project-title">Chrome-tab Color</h3>
-                    <p class="project-desc">A Chrome Extension that lets users assign colors to different tabs for better categorization based on priority/work. Users can set, change, and remove colors.</p>
-                    <div class="tech-stack">
-                        <span class="tech-tag">JavaScript</span>
-                        <span class="tech-tag">ReactJs</span>
-                        <span class="tech-tag">ChromeAPI</span>
-                    </div>
+                    <h3 class="project-title">Loading latest repositories...</h3>
+                    <p class="project-desc">Fetching your most recently updated GitHub projects.</p>
                 </div>
             </div>
         </section>
@@ -705,23 +965,51 @@
         <section id="skills">
             <h2>Technical Arsenal</h2>
             <div class="skills-wrapper">
-                <div class="skill-box"><i class="fab fa-js"></i> JavaScript (ES6+)</div>
-                <div class="skill-box"><i class="fab fa-react"></i> React.js</div>
-                <div class="skill-box"><i class="fab fa-node"></i> Node.js</div>
-                <div class="skill-box"><i class="fas fa-database"></i> MongoDB</div>
+                <div class="skill-box"><i class="fab fa-js"></i> JavaScript</div>
                 <div class="skill-box"><i class="fab fa-python"></i> Python</div>
                 <div class="skill-box"><i class="fas fa-code"></i> C++</div>
-                <div class="skill-box"><i class="fab fa-aws"></i> AWS</div>
-                <div class="skill-box"><i class="fas fa-server"></i> SQL</div>
+                <div class="skill-box"><i class="fas fa-code"></i> C</div>
+                <div class="skill-box"><i class="fas fa-database"></i> SQL</div>
+
+                <div class="skill-box"><i class="fab fa-node"></i> Node.js</div>
+                <div class="skill-box"><i class="fas fa-network-wired"></i> Express.js</div>
+                <div class="skill-box"><i class="fab fa-react"></i> React.js</div>
+
+                <div class="skill-box"><i class="fab fa-docker"></i> Docker</div>
+                <div class="skill-box"><i class="fas fa-cubes"></i> Kubernetes</div>
                 <div class="skill-box"><i class="fab fa-git-alt"></i> Git</div>
+                <div class="skill-box"><i class="fas fa-database"></i> Supabase</div>
+                <div class="skill-box"><i class="fas fa-database"></i> MySQL</div>
+                <div class="skill-box"><i class="fas fa-database"></i> MongoDB</div>
+
+                <div class="skill-box"><i class="fab fa-aws"></i> AWS</div>
+                <div class="skill-box"><i class="fab fa-linux"></i> Linux</div>
+                <div class="skill-box"><i class="fas fa-globe"></i> Web</div>
+                <div class="skill-box"><i class="fab fa-windows"></i> Windows</div>
             </div>
+        </section>
+
+        <!-- GitHub Activity -->
+        <section id="github">
+            <h2>GitHub Activity</h2>
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <span class="activity-value" data-activity="commits">--</span>
+                    <span class="activity-label">Total commits (public)</span>
+                </div>
+                <div class="activity-card">
+                    <span class="activity-value" data-activity="prs">--</span>
+                    <span class="activity-label">Total PRs (public)</span>
+                </div>
+            </div>
+            <p class="activity-note">Live from GitHub public API. Totals exclude private contributions.</p>
         </section>
 
         <!-- Contact -->
         <section id="contact">
             <div class="hero-pre">What's Next?</div>
-            <h2 style="font-size: 3.5rem; margin-bottom: 20px; justify-content: center;">Get In Touch</h2>
-            <p class="hero-desc" style="margin: 0 auto;">
+            <h2 class="contact-title">Get In Touch</h2>
+            <p class="hero-desc contact-desc">
                 I am currently looking for remote internship or full-time opportunities. Whether you have a question or just want to say hi, my inbox is always open.
             </p>
             <a href="mailto:itsmayank435@gmail.com" class="contact-btn hover-target">Connect with Me</a>
@@ -732,6 +1020,10 @@
         </footer>
     </main>
 
+    <button class="back-to-top hover-target" aria-label="Back to top" type="button">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -740,36 +1032,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
 
     <script>
-        
         const links = {
             github: "https://github.com/MayankRaj435",
             linkedin: "https://www.linkedin.com/in/mayank-raj-203534258/",
-            resume: "PATH_TO_YOUR_RESUME.pdf",
-
-            p1_github: "https://github.com/MayankRaj435/zombie-tracker",
-            p1_live: "https://...", 
-            p2_github: "https://github.com/MayankRaj435/vooshfoods_backend",
-            p2_live: "https://...",
-            p3_github: "https://github.com/MayankRaj435/ASL",
-            p3_live: "https://...",
-            p4_github: "https://github.com/MayankRaj435/chrome-color-marker",
-            p4_live: "https://..."
+            resume: "Mayank%20Raj.pdf"
         };
+
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const supportsFinePointer = window.matchMedia("(pointer: fine)").matches;
+        const enable3D = !prefersReducedMotion && window.innerWidth > 768;
+
+        if (prefersReducedMotion) {
+            document.body.classList.add('reduced-motion');
+            document.documentElement.style.scrollBehavior = 'auto';
+        }
+        if (!supportsFinePointer) {
+            document.body.classList.add('no-custom-cursor');
+        }
 
         // Apply Links
         document.getElementById('github-hero').href = links.github;
         document.getElementById('linkedin-hero').href = links.linkedin;
         document.getElementById('resume-btn-desktop').href = links.resume;
         document.getElementById('resume-btn-mobile').href = links.resume;
-        document.getElementById('p1-github').href = links.p1_github;
-        <!-- document.getElementById('p1-link').href = links.p1_live; -->
-        document.getElementById('p2-github').href = links.p2_github;
-        <!-- document.getElementById('p2-link').href = links.p2_live; -->
-        document.getElementById('p3-github').href = links.p3_github;
-        <!-- document.getElementById('p3-link').href = links.p3_live; -->
-        document.getElementById('p4-github').href = links.p4_github;
-        <!-- document.getElementById('p4-link').href = links.p4_live; -->
-
+        document.getElementById('resume-download-desktop').href = links.resume;
+        document.getElementById('resume-download-mobile').href = links.resume;
 
         // ========================================
         // MOBILE MENU LOGIC
@@ -778,17 +1065,392 @@
         const mobileMenu = document.querySelector('.mobile-menu');
         const mobileLinks = document.querySelectorAll('.mobile-link');
 
+        const setMenuState = (isOpen) => {
+            hamburger.classList.toggle('active', isOpen);
+            mobileMenu.classList.toggle('active', isOpen);
+            hamburger.setAttribute('aria-expanded', String(isOpen));
+        };
+
         hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            mobileMenu.classList.toggle('active');
+            const isOpen = hamburger.classList.contains('active');
+            setMenuState(!isOpen);
         });
 
         mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                mobileMenu.classList.remove('active');
-            });
+            link.addEventListener('click', () => setMenuState(false));
         });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                setMenuState(false);
+            }
+        });
+
+        // ========================================
+        // SCROLL UI: PROGRESS + NAV + BACK TO TOP
+        // ========================================
+        const progressBar = document.querySelector('.scroll-progress');
+        const backToTop = document.querySelector('.back-to-top');
+        const nav = document.querySelector('nav');
+
+        const updateScrollUI = () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) : 0;
+
+            if (progressBar) {
+                progressBar.style.width = `${progress * 100}%`;
+            }
+            if (nav) {
+                nav.classList.toggle('scrolled', scrollTop > 50);
+            }
+            if (backToTop) {
+                backToTop.classList.toggle('visible', scrollTop > 500);
+            }
+        };
+
+        let scrollTicking = false;
+        const onScroll = () => {
+            if (scrollTicking) return;
+            scrollTicking = true;
+            requestAnimationFrame(() => {
+                updateScrollUI();
+                scrollTicking = false;
+            });
+        };
+
+        window.addEventListener('scroll', onScroll);
+        window.addEventListener('resize', onScroll);
+        updateScrollUI();
+
+        if (backToTop) {
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+            });
+        }
+
+        // ========================================
+        // ACTIVE NAV HIGHLIGHTING
+        // ========================================
+        const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+        const sectionMap = new Map();
+
+        navLinks.forEach((link) => {
+            const targetId = link.getAttribute('href').replace('#', '');
+            const section = document.getElementById(targetId);
+            if (section) {
+                sectionMap.set(section, link);
+            }
+        });
+
+        if (sectionMap.size > 0) {
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach((link) => {
+                            link.classList.remove('active');
+                            link.removeAttribute('aria-current');
+                        });
+                        const activeLink = sectionMap.get(entry.target);
+                        if (activeLink) {
+                            activeLink.classList.add('active');
+                            activeLink.setAttribute('aria-current', 'page');
+                        }
+                    }
+                });
+            }, { rootMargin: '-40% 0px -55% 0px' });
+
+            sectionMap.forEach((link, section) => sectionObserver.observe(section));
+        }
+
+        // ========================================
+        // GITHUB DATA (PROJECTS + STATS)
+        // ========================================
+        const githubUser = "MayankRaj435";
+        const repoLimit = 6;
+        const preferredRepoNames = ["rag", "crowdqueue"];
+        const excludedRepoNames = ["codsoft"];
+        const repoFilters = {
+            excludeForks: true,
+            excludeArchived: true,
+            excludeProfileRepo: true
+        };
+
+        const githubHeaders = {
+            Accept: "application/vnd.github+json, application/vnd.github.mercy-preview+json",
+            "X-GitHub-Api-Version": "2022-11-28"
+        };
+        const githubCommitHeaders = {
+            Accept: "application/vnd.github+json, application/vnd.github.cloak-preview+json",
+            "X-GitHub-Api-Version": "2022-11-28"
+        };
+
+        const formatNumber = (value) => new Intl.NumberFormat('en-US').format(value);
+        const setText = (el, value) => {
+            if (el) el.textContent = value;
+        };
+
+        const fetchGithubJson = async (url, headers = githubHeaders) => {
+            const response = await fetch(url, { headers });
+            if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
+            return response.json();
+        };
+
+        const animateCount = (el, target) => {
+            const duration = 1200;
+            const startTime = performance.now();
+
+            const step = (now) => {
+                const progress = Math.min((now - startTime) / duration, 1);
+                const current = Math.round(target * progress);
+                el.textContent = formatNumber(current);
+                if (progress < 1) requestAnimationFrame(step);
+            };
+
+            requestAnimationFrame(step);
+        };
+
+        const observeCountUp = (el, value) => {
+            if (!el) return;
+            if (prefersReducedMotion) {
+                el.textContent = formatNumber(value);
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        animateCount(entry.target, value);
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.6 });
+
+            observer.observe(el);
+        };
+
+        const updateHeroStats = (stats) => {
+            const statEls = document.querySelectorAll('.stat-value[data-stat]');
+            statEls.forEach((el) => {
+                const key = el.dataset.stat;
+                if (stats[key] === undefined) return;
+                observeCountUp(el, stats[key]);
+            });
+        };
+
+        const updateActivityStats = (stats) => {
+            const activityEls = document.querySelectorAll('.activity-value[data-activity]');
+            activityEls.forEach((el) => {
+                const key = el.dataset.activity;
+                if (stats[key] === undefined) return;
+                observeCountUp(el, stats[key]);
+            });
+        };
+
+        const normalizeTag = (value) => (value ? value.toLowerCase() : 'other');
+        const getRecencyScore = (pushedAt) => {
+            if (!pushedAt) return 0;
+            const now = Date.now();
+            const pushedTime = new Date(pushedAt).getTime();
+            const daysAgo = (now - pushedTime) / (1000 * 60 * 60 * 24);
+            if (daysAgo <= 30) return 6;
+            if (daysAgo <= 90) return 4;
+            if (daysAgo <= 180) return 2;
+            return 0;
+        };
+        const scoreRepo = (repo) => {
+            const stars = repo.stargazers_count || 0;
+            const forks = repo.forks_count || 0;
+            const watchers = repo.watchers_count || 0;
+            const issues = repo.open_issues_count || 0;
+            const size = repo.size || 0;
+            const topics = repo.topics ? repo.topics.length : 0;
+            const hasDemo = repo.homepage ? 2 : 0;
+            return (
+                stars * 5 +
+                forks * 4 +
+                watchers * 2 +
+                issues * 0.5 +
+                size / 50 +
+                topics * 2 +
+                getRecencyScore(repo.pushed_at) +
+                hasDemo
+            );
+        };
+
+        const pickFeaturedRepos = (repos) => {
+            const scored = [...repos].sort((a, b) => scoreRepo(b) - scoreRepo(a));
+            const preferred = [];
+            const used = new Set();
+
+            preferredRepoNames.forEach((slug) => {
+                const match = scored.find((repo) => repo.name.toLowerCase().includes(slug));
+                if (match && !used.has(match.id)) {
+                    preferred.push(match);
+                    used.add(match.id);
+                }
+            });
+
+            const remaining = scored.filter((repo) => !used.has(repo.id));
+            return [...preferred, ...remaining].slice(0, repoLimit);
+        };
+
+        const buildProjectCard = (repo) => {
+            const card = document.createElement('div');
+            card.className = 'project-card hover-target';
+
+            const language = repo.language || 'Other';
+            const updatedAt = repo.pushed_at ? new Date(repo.pushed_at) : null;
+            const updatedLabel = updatedAt
+                ? updatedAt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+                : 'Unknown';
+            const description = repo.description || 'No description yet.';
+            const title = repo.name.replace(/-/g, ' ');
+
+            const topics = repo.topics ? repo.topics.slice(0, 3) : [];
+            const tags = [language, ...topics].map(normalizeTag);
+            card.dataset.tags = tags.join(',');
+
+            const homepageLink = repo.homepage
+                ? `<a href="${repo.homepage}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i></a>`
+                : '';
+
+            card.innerHTML = `
+                <div class="project-links">
+                    <a href="${repo.html_url}" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
+                    ${homepageLink}
+                </div>
+                <i class="far fa-folder folder-icon"></i>
+                <h3 class="project-title">${title}</h3>
+                <p class="project-desc">${description}</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">${language}</span>
+                    ${topics.map((topic) => `<span class="tech-tag">${topic}</span>`).join('')}
+                    <span class="tech-tag">★ ${formatNumber(repo.stargazers_count)}</span>
+                    <span class="tech-tag">Updated ${updatedLabel}</span>
+                </div>
+            `;
+
+            return card;
+        };
+
+        const renderProjects = (repos) => {
+            const grid = document.getElementById('projects-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            if (!repos.length) {
+                grid.innerHTML = `
+                    <div class="project-card hover-target">
+                        <i class="far fa-folder folder-icon"></i>
+                        <h3 class="project-title">No public repositories yet</h3>
+                        <p class="project-desc">Publish a repo on GitHub and it will appear here automatically.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            repos.forEach((repo) => grid.appendChild(buildProjectCard(repo)));
+        };
+
+        const renderFilters = (repos) => {
+            const filterContainer = document.getElementById('project-filters');
+            if (!filterContainer) return;
+
+            const languages = repos.map((repo) => repo.language).filter(Boolean);
+            const uniqueLanguages = [...new Set(languages)];
+            const hasOther = repos.some((repo) => !repo.language);
+
+            const filters = [
+                { label: 'All', value: 'all' },
+                ...uniqueLanguages.map((language) => ({
+                    label: language,
+                    value: language.toLowerCase()
+                })),
+                ...(hasOther ? [{ label: 'Other', value: 'other' }] : [])
+            ];
+
+            filterContainer.innerHTML = filters.map((filter, index) => (
+                `<button class="filter-chip hover-target ${index === 0 ? 'active' : ''}" data-filter="${filter.value}" type="button">${filter.label}</button>`
+            )).join('');
+
+            const applyFilter = (filter) => {
+                const cards = document.querySelectorAll('#projects-grid .project-card');
+                cards.forEach((card) => {
+                    const tagList = card.dataset.tags ? card.dataset.tags.split(',') : [];
+                    const matches = filter === 'all' || tagList.includes(filter);
+                    card.classList.toggle('is-hidden', !matches);
+                });
+            };
+
+            filterContainer.querySelectorAll('.filter-chip').forEach((button) => {
+                button.addEventListener('click', () => {
+                    filterContainer.querySelectorAll('.filter-chip').forEach((btn) => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    applyFilter(button.dataset.filter);
+                });
+            });
+        };
+
+        const loadGitHubData = async () => {
+            try {
+                const user = await fetchGithubJson(`https://api.github.com/users/${githubUser}`);
+                const repoPages = Math.max(1, Math.ceil(user.public_repos / 100));
+                const repoRequests = [];
+
+                for (let page = 1; page <= repoPages; page += 1) {
+                    repoRequests.push(fetchGithubJson(
+                        `https://api.github.com/users/${githubUser}/repos?per_page=100&sort=pushed&page=${page}`
+                    ));
+                }
+
+                const allRepos = (await Promise.all(repoRequests)).flat();
+                const totalStars = allRepos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+
+                updateHeroStats({
+                    repos: user.public_repos,
+                    stars: totalStars,
+                    followers: user.followers
+                });
+
+                const filteredRepos = allRepos.filter((repo) => {
+                    if (excludedRepoNames.some((slug) => repo.name.toLowerCase().includes(slug))) return false;
+                    if (repoFilters.excludeForks && repo.fork) return false;
+                    if (repoFilters.excludeArchived && repo.archived) return false;
+                    if (repoFilters.excludeProfileRepo && repo.name.toLowerCase() === githubUser.toLowerCase()) return false;
+                    return true;
+                });
+
+                const sortedRepos = pickFeaturedRepos(filteredRepos);
+
+                renderProjects(sortedRepos);
+                renderFilters(sortedRepos);
+                initTilt();
+            } catch (error) {
+                console.error('GitHub data load failed:', error);
+            }
+
+            try {
+                const [commits, prs] = await Promise.all([
+                    fetchGithubJson(
+                        `https://api.github.com/search/commits?q=author:${githubUser}`,
+                        githubCommitHeaders
+                    ),
+                    fetchGithubJson(
+                        `https://api.github.com/search/issues?q=author:${githubUser}+type:pr`
+                    )
+                ]);
+
+                updateActivityStats({
+                    commits: commits.total_count || 0,
+                    prs: prs.total_count || 0
+                });
+            } catch (error) {
+                console.error('GitHub activity load failed:', error);
+            }
+        };
+
+        loadGitHubData();
 
         // ========================================
         // INTERACTIVE CURSOR
@@ -797,169 +1459,186 @@
         const cursorDot = document.querySelector('.cursor-dot');
         const hoverTargets = document.querySelectorAll('.hover-target');
 
-        document.addEventListener('mousemove', (e) => {
-            cursorDot.style.left = e.clientX + 'px';
-            cursorDot.style.top = e.clientY + 'px';
-            
-            setTimeout(() => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            }, 50);
-        });
+        if (!prefersReducedMotion && supportsFinePointer && cursor && cursorDot) {
+            document.addEventListener('mousemove', (e) => {
+                cursorDot.style.left = e.clientX + 'px';
+                cursorDot.style.top = e.clientY + 'px';
 
-        hoverTargets.forEach(target => {
-            target.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-            target.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-        });
+                setTimeout(() => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                }, 50);
+            });
 
-        // ========================================
-        // ORIGINAL 3D EFFECT (TORUS KNOT)
-        // ========================================
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-        // 1. Create Torus Knot (The "Brain/Network" Geometry)
-        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-        const material = new THREE.MeshBasicMaterial({ 
-            color: 0x00f3ff, 
-            wireframe: true,
-            transparent: true,
-            opacity: 0.15
-        });
-        const torusKnot = new THREE.Mesh(geometry, material);
-        scene.add(torusKnot);
-
-        // 2. Create Starfield Particles
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 700;
-        const posArray = new Float32Array(particlesCount * 3);
-
-        for(let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 50; // Spread particles
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                target.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
         }
 
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.05,
-            color: 0xbc13fe,
-            transparent: true,
-            opacity: 0.8
-        });
-        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particlesMesh);
+        // ========================================
+        // 3D BACKGROUND
+        // ========================================
+        let torusKnot = null;
+        let camera = null;
+        let particlesMesh = null;
+        let renderer = null;
 
-        // Position Camera
-        camera.position.z = 30;
+        if (enable3D) {
+            const scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 
-        // 3. Animation Loop
-        const clock = new THREE.Clock();
-
-        function animate() {
-            const elapsedTime = clock.getElapsedTime();
-
-            // Constant gentle rotation
-            torusKnot.rotation.y = elapsedTime * 0.1;
-            particlesMesh.rotation.y = elapsedTime * 0.05;
-            particlesMesh.rotation.x = elapsedTime * -0.02;
-
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // Handle Resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0x2de2e6,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15
+            });
+            torusKnot = new THREE.Mesh(geometry, material);
+            scene.add(torusKnot);
+
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 700;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for (let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 50;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.05,
+                color: 0xffb347,
+                transparent: true,
+                opacity: 0.7
+            });
+            particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+
+            camera.position.z = 30;
+
+            const clock = new THREE.Clock();
+
+            const animate = () => {
+                const elapsedTime = clock.getElapsedTime();
+
+                torusKnot.rotation.y = elapsedTime * 0.1;
+                particlesMesh.rotation.y = elapsedTime * 0.05;
+                particlesMesh.rotation.x = elapsedTime * -0.02;
+
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            };
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
 
         // ========================================
         // SCROLL ANIMATIONS (GSAP)
         // ========================================
-        gsap.registerPlugin(ScrollTrigger);
+        if (!prefersReducedMotion) {
+            gsap.registerPlugin(ScrollTrigger);
 
-        // 1. Navbar Blur on Scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 50) nav.classList.add('scrolled');
-            else nav.classList.remove('scrolled');
-        });
+            gsap.from(".hero-pre, .hero-badges, .glitch-name, .typewriter, .hero-desc, .hero-stats, .social-links", {
+                opacity: 0,
+                y: 20,
+                duration: 1,
+                ease: "power3.out",
+                stagger: 0.12
+            });
 
-        // 2. Section Reveal
-        const sections = document.querySelectorAll('section');
-        sections.forEach(section => {
-            gsap.fromTo(section, 
-                { opacity: 0, y: 50 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top 80%",
-                        end: "bottom 20%",
-                        toggleActions: "play none none reverse"
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                gsap.fromTo(section,
+                    { opacity: 0, y: 50 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        scrollTrigger: {
+                            trigger: section,
+                            start: "top 80%",
+                            end: "bottom 20%",
+                            toggleActions: "play none none reverse"
+                        }
                     }
-                }
-            );
-        });
+                );
+            });
 
-        // 3. Scroll Interaction for Torus Knot
-        // Rotate the Torus Knot and move camera as user scrolls
-        gsap.to(torusKnot.rotation, {
-            x: 3, // Rotate on X axis
-            z: 2, // Rotate on Z axis
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1 // Smooth scrubbing
-            }
-        });
+            if (enable3D && torusKnot && camera) {
+                gsap.to(torusKnot.rotation, {
+                    x: 3,
+                    z: 2,
+                    scrollTrigger: {
+                        trigger: "body",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1
+                    }
+                });
 
-        gsap.to(camera.position, {
-            z: 15, // Zoom in slightly
-            y: -5, // Move down
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1
+                gsap.to(camera.position, {
+                    z: 15,
+                    y: -5,
+                    scrollTrigger: {
+                        trigger: "body",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: 1
+                    }
+                });
             }
-        });
+        }
 
         // ========================================
         // TYPEWRITER EFFECT
         // ========================================
-        new Typewriter('#typing-text', {
-            strings: [
-                'Intelligent Systems.', 
-                'Scalable Web Apps.', 
-                'Robotics Solutions.', 
-                'AI-Powered Tools.'
-            ],
-            autoStart: true,
-            loop: true,
-            cursor: '|',
-            delay: 50,
-            deleteSpeed: 30,
-        });
+        const typingText = document.getElementById('typing-text');
+        if (typingText) {
+            if (prefersReducedMotion) {
+                typingText.textContent = 'Intelligent Systems.';
+            } else {
+                new Typewriter('#typing-text', {
+                    strings: [
+                        'Intelligent Systems.',
+                        'Scalable Web Apps.',
+                        'Robotics Solutions.',
+                        'AI-Powered Tools.'
+                    ],
+                    autoStart: true,
+                    loop: true,
+                    cursor: '|',
+                    delay: 50,
+                    deleteSpeed: 30,
+                });
+            }
+        }
 
         // ========================================
-        // TILT EFFECT (Cards)
+        // TILT EFFECT (CARDS)
         // ========================================
-        VanillaTilt.init(document.querySelectorAll(".project-card"), {
-            max: 8,
-            speed: 400,
-            glare: true,
-            "max-glare": 0.2,
-            scale: 1.02
-        });
+        function initTilt() {
+            if (prefersReducedMotion || !window.VanillaTilt) return;
+            VanillaTilt.init(document.querySelectorAll(".project-card"), {
+                max: 8,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.2,
+                scale: 1.02
+            });
+        }
+
+        initTilt();
 
     </script>
 </body>
