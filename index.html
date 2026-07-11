@@ -1,1645 +1,697 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mayank Raj | Robotics & Full Stack Engineer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Space+Grotesk:wght@300;500;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mayank_raj — ~/resume</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&display=swap');
 
-        :root {
-            --primary: #2de2e6;
-            --secondary: #ffb347;
-            --bg: #0b0f14;
-            --bg-deep: #07090c;
-            --card-bg: rgba(15, 20, 28, 0.6);
-            --text: #f7f7f2;
-            --text-muted: #a8b3c2;
-            --border: rgba(255, 255, 255, 0.12);
-            --glow: rgba(45, 226, 230, 0.35);
-        }
+:root{
+  --bg:#0a0d11;
+  --bg-panel:#0e1217;
+  --bg-elevated:#12161c;
+  --line:#1c222b;
+  --text:#c9d1d9;
+  --text-dim:#5c6673;
+  --text-bright:#eef2f6;
+  --green:#3fb950;
+  --amber:#d29922;
+  --blue:#58a6ff;
+  --pink:#d2a8ff;
+  --gutter:#3a4250;
+  --radius:6px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:auto;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'JetBrains Mono', monospace;
+  font-size:14px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(63,185,80,0.28);color:var(--text-bright);}
+a{color:inherit;}
 
-        html {
-            scroll-behavior: smooth;
-        }
+/* ===== Editor chrome ===== */
+.editor{
+  max-width:1180px;
+  margin:28px auto;
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,0.55);
+  background:var(--bg-panel);
+}
+.titlebar{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:11px 16px;
+  background:var(--bg-elevated);
+  border-bottom:1px solid var(--line);
+}
+.dots{display:flex;gap:8px;}
+.dot{width:11px;height:11px;border-radius:50%;}
+.dot.r{background:#ff5f56;}
+.dot.y{background:#ffbd2e;}
+.dot.g{background:#27c93f;}
+.titlebar-path{
+  flex:1;
+  text-align:center;
+  color:var(--text-dim);
+  font-size:12px;
+  letter-spacing:.3px;
+}
+.titlebar-actions{display:flex;gap:16px;color:var(--text-dim);font-size:12px;}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none; 
-        }
+.tabbar{
+  display:flex;
+  overflow-x:auto;
+  background:var(--bg-panel);
+  border-bottom:1px solid var(--line);
+  scrollbar-width:none;
+}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 18px;
+  font-size:12.5px;
+  color:var(--text-dim);
+  white-space:nowrap;
+  border-right:1px solid var(--line);
+  cursor:pointer;
+  transition:.2s;
+  position:relative;
+}
+.tab i{font-size:11px;}
+.tab:hover{color:var(--text);background:rgba(255,255,255,0.02);}
+.tab.active{color:var(--text-bright);background:var(--bg);}
+.tab.active::after{
+  content:'';
+  position:absolute;
+  left:0;right:0;top:0;
+  height:2px;
+  background:var(--amber);
+}
+.tab .dirty{width:6px;height:6px;border-radius:50%;background:var(--text-dim);margin-left:2px;}
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: radial-gradient(circle at 20% 10%, rgba(45, 226, 230, 0.08), transparent 35%),
-                        radial-gradient(circle at 85% 15%, rgba(255, 179, 71, 0.08), transparent 40%),
-                        linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
-            color: var(--text);
-            overflow-x: hidden;
-            position: relative;
-        }
+.body-wrap{display:flex;min-height:70vh;}
 
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at 60% 60%, rgba(45, 226, 230, 0.05), transparent 40%);
-            z-index: -3;
-            pointer-events: none;
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 48px 48px;
-            opacity: 0.08;
-            z-index: -2;
-            pointer-events: none;
-        }
+/* ===== Sidebar (explorer) ===== */
+.sidebar{
+  width:220px;
+  flex-shrink:0;
+  background:var(--bg-panel);
+  border-right:1px solid var(--line);
+  padding:18px 0;
+}
+.sidebar-title{
+  font-size:11px;
+  letter-spacing:1.5px;
+  color:var(--text-dim);
+  padding:0 18px 10px;
+  text-transform:uppercase;
+}
+.explorer-item{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:7px 18px;
+  font-size:12.5px;
+  color:var(--text-dim);
+  cursor:pointer;
+  transition:.15s;
+  border-left:2px solid transparent;
+}
+.explorer-item i{width:14px;font-size:12px;color:var(--blue);}
+.explorer-item:hover{color:var(--text);background:rgba(255,255,255,0.02);}
+.explorer-item.active{color:var(--text-bright);background:rgba(63,185,80,0.06);border-left-color:var(--green);}
+.sidebar-foot{padding:20px 18px 0;border-top:1px solid var(--line);margin-top:16px;}
+.status-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:11px;color:var(--green);
+  padding:5px 10px;border:1px solid rgba(63,185,80,0.35);
+  border-radius:20px;background:rgba(63,185,80,0.07);
+}
+.status-chip .blip{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.8s infinite;}
+@keyframes pulse{0%{opacity:1;}50%{opacity:.35;}100%{opacity:1;}}
 
-        ::selection {
-            background: rgba(45, 226, 230, 0.3);
-            color: var(--text);
-        }
+/* ===== Main pane ===== */
+.pane{flex:1;min-width:0;padding:8px 0 60px;}
+.filesection{padding:36px 40px 8px;scroll-margin-top:20px;}
+.file-comment{color:var(--text-dim);font-size:12px;margin-bottom:4px;}
+.line{display:flex;gap:18px;}
+.gutter{
+  color:var(--gutter);
+  font-size:12.5px;
+  user-select:none;
+  width:26px;
+  text-align:right;
+  flex-shrink:0;
+  padding-top:1px;
+}
+.code{white-space:pre-wrap;word-break:break-word;}
+.kw{color:var(--pink);}
+.str{color:var(--green);}
+.key{color:var(--blue);}
+.cmt{color:var(--text-dim);font-style:italic;}
+.h1{color:var(--text-bright);font-size:1.9rem;font-weight:800;letter-spacing:-.5px;}
+.h2sub{color:var(--amber);font-size:1rem;}
 
-        /* Custom Cursor */
-        .cursor {
-            width: 30px;
-            height: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.15s ease-out;
-            transform: translate(-50%, -50%);
-            mix-blend-mode: difference;
-        }
-        .cursor-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px var(--primary);
-        }
-        .cursor.hovered {
-            transform: translate(-50%, -50%) scale(2);
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary);
-            backdrop-filter: blur(2px);
-        }
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
 
-        /* 3D Background Container */
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: -1;
-        }
-        
-        /* Vignette */
-        .vignette {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, var(--bg-deep) 90%);
-            pointer-events: none;
-            z-index: -1;
-        }
+.blink-cursor{display:inline-block;width:8px;height:1.1em;background:var(--green);vertical-align:middle;animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{opacity:0;}}
 
-        /* Scroll Progress */
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            box-shadow: 0 0 12px var(--glow);
-            z-index: 200;
-        }
+/* Hero stats */
+.stat-row{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0 6px;}
+.stat-box{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:12px 18px;
+  background:var(--bg-elevated);
+  min-width:120px;
+}
+.stat-box .num{display:block;font-size:1.4rem;color:var(--text-bright);font-weight:700;}
+.stat-box .lbl{font-size:10.5px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;}
 
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 25px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            transition: 0.4s ease;
-        }
-        nav.scrolled {
-            padding: 15px 50px;
-            background: rgba(5, 5, 5, 0.85);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text);
-            text-decoration: none;
-            letter-spacing: 1px;
-            z-index: 102;
-            text-shadow: 0 0 10px var(--glow);
-        }
-        .logo span { color: var(--primary); }
-        
-        /* Desktop Menu */
-        .nav-links {
-            display: flex;
-            gap: 40px;
-            list-style: none;
-            align-items: center;
-        }
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            position: relative;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.8rem;
-        }
-        .nav-links a:not(.btn-resume)::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: -5px;
-            left: 0;
-            background-color: var(--primary);
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .nav-links a:not(.btn-resume):hover::after { width: 100%; }
-        .nav-links a:hover { color: var(--primary); text-shadow: 0 0 8px var(--primary); }
-        .nav-links a.active {
-            color: var(--secondary);
-            text-shadow: 0 0 10px rgba(255, 179, 71, 0.4);
-        }
-        .nav-links a.active::after { width: 100%; background-color: var(--secondary); }
-        
-        .btn-resume {
-            padding: 12px 30px;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-            background: rgba(45, 226, 230, 0.06);
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-resume:hover {
-            background: rgba(45, 226, 230, 0.12);
-            box-shadow: 0 0 20px var(--glow);
-            transform: translateY(-2px);
-        }
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px;}
+.pill{
+  font-size:11.5px;color:var(--text);
+  border:1px solid var(--line);
+  padding:5px 12px;border-radius:20px;
+  background:var(--bg-elevated);
+}
+.pill.on{color:var(--amber);border-color:rgba(210,153,34,.4);}
 
-        .btn-download {
-            padding: 12px 26px;
-            border: 1px solid var(--secondary);
-            color: var(--secondary);
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-            background: rgba(255, 179, 71, 0.08);
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-download:hover {
-            background: rgba(255, 179, 71, 0.16);
-            box-shadow: 0 0 18px rgba(255, 179, 71, 0.35);
-            transform: translateY(-2px);
-        }
+.social-row{display:flex;gap:12px;margin-top:22px;}
+.social-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 16px;border:1px solid var(--line);border-radius:var(--radius);
+  font-size:12px;color:var(--text);text-decoration:none;transition:.2s;
+}
+.social-btn:hover{border-color:var(--green);color:var(--green);transform:translateY(-2px);}
+.social-btn.primary{background:rgba(63,185,80,0.08);border-color:rgba(63,185,80,.4);color:var(--green);}
+.social-btn.primary:hover{background:rgba(63,185,80,0.15);}
 
-        /* Mobile Hamburger */
-        .hamburger {
-            display: none;
-            cursor: pointer;
-            z-index: 102;
-            border: none;
-            background: none;
-            padding: 0;
-        }
-        .bar {
-            width: 30px;
-            height: 2px;
-            background-color: var(--text);
-            margin: 6px 0;
-            transition: 0.4s;
-        }
+/* Experience */
+.exp-entry{margin:28px 0;padding-left:18px;border-left:2px solid var(--line);position:relative;}
+.exp-entry::before{content:'';position:absolute;left:-6px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--bg-panel);border:2px solid var(--green);transition:.25s;}
+.exp-entry:hover::before{background:var(--green);box-shadow:0 0 10px var(--green);}
+.exp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+.exp-ts{color:var(--text-dim);font-size:11.5px;}
+.exp-role{color:var(--text-bright);font-size:1.08rem;font-weight:700;margin:3px 0 2px;}
+.exp-org{color:var(--amber);font-size:12.5px;}
+.exp-type{
+  font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--blue);border:1px solid rgba(88,166,255,.35);background:rgba(88,166,255,.07);
+  padding:4px 10px;border-radius:20px;white-space:nowrap;margin-top:2px;
+}
+.exp-detail{margin-top:14px;}
+.exp-label{
+  font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);
+  margin-bottom:6px;
+}
+.exp-label::before{content:'// ';color:var(--text-dim);}
+.exp-text{color:var(--text);font-size:13px;line-height:1.65;}
+.exp-bullets{color:var(--text);font-size:13px;}
+.exp-bullets div{margin-bottom:6px;padding-left:20px;position:relative;line-height:1.6;}
+.exp-bullets div::before{content:'+';position:absolute;left:2px;color:var(--green);font-weight:700;}
+.exp-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.exp-tags span{
+  font-size:10.5px;color:var(--amber);background:rgba(210,153,34,0.09);
+  border:1px solid rgba(210,153,34,0.25);padding:4px 10px;border-radius:5px;
+}
 
-        /* Mobile Menu */
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 100%;
-            height: 100vh;
-            background: rgba(5, 5, 5, 0.98);
-            backdrop-filter: blur(20px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            z-index: 101;
-        }
-        .mobile-menu.active { right: 0; }
-        .mobile-menu a {
-            font-size: 2rem;
-            margin: 20px 0;
-            color: var(--text);
-            text-decoration: none;
-            font-family: 'Space Grotesk';
-            opacity: 0;
-            transform: translateY(20px);
-            transition: 0.5s;
-        }
-        .mobile-menu.active a {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        /* Stagger animation */
-        .mobile-menu a:nth-child(1) { transition-delay: 0.1s; }
-        .mobile-menu a:nth-child(2) { transition-delay: 0.2s; }
-        .mobile-menu a:nth-child(3) { transition-delay: 0.3s; }
-        .mobile-menu a:nth-child(4) { transition-delay: 0.4s; }
-        .mobile-menu a:nth-child(5) { transition-delay: 0.5s; }
+/* Projects */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:18px;}
+.proj-card{
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;background:var(--bg-elevated);
+  transition:.25s;
+}
+.proj-card:hover{border-color:var(--blue);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.4);}
+.proj-name{color:var(--text-bright);font-weight:700;font-size:13.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.proj-name a{color:var(--text-dim);font-size:13px;}
+.proj-name a:hover{color:var(--green);}
+.proj-desc{color:var(--text-dim);font-size:12px;margin:8px 0 12px;line-height:1.6;}
+.proj-tags{display:flex;flex-wrap:wrap;gap:6px;font-size:10.5px;}
+.proj-tags span{color:var(--blue);background:rgba(88,166,255,0.08);padding:3px 8px;border-radius:4px;}
 
-        .hamburger.active .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); background: var(--primary); }
-        .hamburger.active .bar:nth-child(2) { opacity: 0; }
-        .hamburger.active .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); background: var(--primary); }
+/* Skills json */
+.skill-block{margin:8px 0;}
+.skill-cat{color:var(--blue);}
+.skill-items{color:var(--green);}
 
-        /* Layout */
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 1;
-        }
+/* Achievements */
+.ach-list div{margin:6px 0;padding-left:20px;position:relative;font-size:13px;}
+.ach-list div::before{content:'\2713';position:absolute;left:0;color:var(--green);font-size:11px;top:3px;}
 
-        section {
-            padding: 120px 0;
-            position: relative;
-            scroll-margin-top: 120px;
-        }
+/* Contact */
+.term-line{color:var(--text-dim);}
+.term-prompt{color:var(--green);}
+.term-out{color:var(--text-bright);margin:2px 0 12px;}
 
-        h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 3rem;
-            margin-bottom: 60px;
-            display: flex;
-            align-items: center;
-        }
-        h2::before {
-            content: '0' counter(section) '.';
-            counter-increment: section;
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-right: 15px;
-            font-family: 'Space Grotesk';
-            font-weight: 300;
-        }
-        h2::after {
-            content: '';
-            display: block;
-            width: 200px;
-            height: 1px;
-            background: rgba(255,255,255,0.1);
-            margin-left: 20px;
-        }
-        body { counter-reset: section; }
+/* Status bar */
+.statusbar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--green);
+  color:#04140a;
+  font-size:11px;font-weight:600;
+  padding:6px 16px;
+}
+.statusbar .seg{display:flex;align-items:center;gap:16px;}
+.statusbar .seg span{display:flex;align-items:center;gap:6px;}
 
-        /* Hero Section */
-        #about,
-        #hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 140px;
-            gap: 10px;
-        }
-        .hero-pre {
-            color: var(--primary);
-            font-family: 'Space Grotesk';
-            margin-bottom: 14px;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-        }
-        .hero-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            row-gap: 10px;
-            margin: 8px 0 22px;
-            max-width: 520px;
-        }
-        .hero-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            border-radius: 999px;
-            border: 1px solid var(--border);
-            background: rgba(15, 20, 28, 0.5);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
-        .hero-pill i { color: var(--secondary); }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--secondary);
-            box-shadow: 0 0 10px rgba(255, 179, 71, 0.6);
-            animation: pulse 2.2s infinite;
-        }
-        .glitch-name {
-            font-size: 5.5rem;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 8px;
-            color: #e0e0e0;
-            text-shadow: 4px 4px 0px rgba(45, 226, 230, 0.18);
-        }
-        .typewriter {
-            font-size: 2.5rem;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-            height: 50px;
-            font-weight: 700;
-        }
-        .typewriter span { color: var(--secondary); text-shadow: 0 0 15px rgba(255, 179, 71, 0.45); }
-        
-        .hero-desc {
-            max-width: 540px;
-            line-height: 1.7;
-            color: var(--text-muted);
-            margin-bottom: 36px;
-            font-size: 1.1rem;
-        }
-        .social-links {
-            display: flex;
-            gap: 25px;
-        }
-        .social-icon {
-            color: var(--text);
-            font-size: 1.4rem;
-            transition: 0.3s;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 50%;
-        }
-        .social-icon:hover {
-            color: var(--primary);
-            border-color: var(--primary);
-            box-shadow: 0 0 15px var(--glow);
-            transform: translateY(-5px);
-        }
-        .hero-stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px;
-            margin-bottom: 35px;
-        }
-        .stat {
-            min-width: 150px;
-            padding: 14px 18px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: rgba(10, 14, 20, 0.6);
-            box-shadow: inset 0 0 20px rgba(45, 226, 230, 0.05);
-        }
-        .stat-value {
-            display: block;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 6px;
-        }
-        .stat-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-        }
+footer.done{text-align:center;color:var(--text-dim);font-size:11.5px;padding:26px 10px 40px;}
 
-        /* Experience Timeline */
-        .timeline {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 1px;
-            background: linear-gradient(to bottom, var(--primary), rgba(255,255,255,0.1));
-        }
-        .timeline-item {
-            margin-left: 40px;
-            margin-bottom: 60px;
-            position: relative;
-        }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -45px;
-            top: 5px;
-            width: 10px;
-            height: 10px;
-            background: var(--bg);
-            border: 2px solid var(--primary);
-            border-radius: 50%;
-            transition: 0.3s;
-            box-shadow: 0 0 10px var(--primary);
-        }
-        .timeline-item:hover::before {
-            background: var(--primary);
-            transform: scale(1.5);
-        }
-        .timeline-date {
-            color: var(--primary);
-            font-family: 'Space Grotesk';
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            display: inline-block;
-            border: 1px solid rgba(45, 226, 230, 0.35);
-            padding: 2px 10px;
-            border-radius: 15px;
-        }
-        .timeline-title {
-            font-size: 1.6rem;
-            margin-bottom: 5px;
-            color: #fff;
-        }
-        .timeline-company {
-            color: var(--secondary);
-            font-style: italic;
-            margin-bottom: 15px;
-            display: block;
-            font-size: 1.1rem;
-        }
-        .timeline p { color: var(--text-muted); line-height: 1.6; }
+.back-top{
+  position:fixed;right:26px;bottom:26px;width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--line);background:var(--bg-elevated);color:var(--text);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transform:translateY(10px);transition:.3s;z-index:50;
+}
+.back-top.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
+.back-top:hover{border-color:var(--green);color:var(--green);}
 
-        /* Projects Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-        .project-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin: 0 0 30px;
-        }
-        .filter-chip {
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 999px;
-            font-family: 'Space Grotesk';
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.7rem;
-            transition: 0.3s;
-        }
-        .filter-chip:hover,
-        .filter-chip.active {
-            color: var(--bg);
-            background: var(--primary);
-            border-color: var(--primary);
-            box-shadow: 0 0 18px var(--glow);
-        }
-        .filter-chip:focus-visible,
-        .back-to-top:focus-visible,
-        .btn-resume:focus-visible,
-        .hamburger:focus-visible {
-            outline: 2px solid var(--primary);
-            outline-offset: 3px;
-        }
-        .project-card.is-hidden { display: none; }
-        .project-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            padding: 35px 30px;
-            border-radius: 8px;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: 0.4s;
-        }
-        .project-card:hover::before { transform: scaleX(1); }
-        
-        .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            border-color: rgba(255,255,255,0.2);
-        }
-        
-        .folder-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 25px;
-            display: block;
-        }
-        .project-links {
-            position: absolute;
-            top: 35px;
-            right: 30px;
-            display: flex;
-            gap: 15px;
-            z-index: 2;
-        }
-        .project-links a {
-            color: var(--text-muted);
-            font-size: 1.3rem;
-            transition: 0.3s;
-        }
-        .project-links a:hover { color: var(--primary); transform: scale(1.1); }
-        
-        .project-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-            color: var(--text);
-            transition: 0.3s;
-        }
-        .project-card:hover .project-title { color: var(--primary); }
-        
-        .project-desc {
-            font-size: 1rem;
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            font-family: 'Space Grotesk';
-            font-size: 0.8rem;
-            margin-top: auto;
-        }
-        .tech-tag {
-            color: var(--secondary);
-            background: rgba(255, 179, 71, 0.12);
-            padding: 4px 10px;
-            border-radius: 15px;
-        }
-
-        /* Skills Section */
-        .skills-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-        }
-        .skill-box {
-            padding: 15px 25px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 4px;
-            font-family: 'Space Grotesk';
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1rem;
-            color: var(--text);
-        }
-        .skill-box:hover {
-            border-color: var(--primary);
-            background: rgba(45, 226, 230, 0.08);
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(45, 226, 230, 0.18);
-        }
-        .skill-box i { color: var(--primary); }
-
-        /* GitHub Activity */
-        .activity-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 22px;
-            margin-bottom: 20px;
-        }
-        .activity-card {
-            padding: 28px 26px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: rgba(12, 16, 22, 0.6);
-            box-shadow: inset 0 0 18px rgba(45, 226, 230, 0.05);
-        }
-        .activity-value {
-            display: block;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-        .activity-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-        }
-        .activity-note {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            max-width: 520px;
-        }
-
-        /* Contact */
-        #contact {
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-            padding-bottom: 150px;
-        }
-        #contact .hero-pre {
-            text-align: center;
-        }
-        #contact .contact-title {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            justify-content: center;
-            gap: 12px;
-        }
-        #contact .contact-title::after {
-            display: none;
-        }
-        #contact .contact-desc {
-            margin: 0 auto;
-        }
-        .contact-btn {
-            display: inline-block;
-            margin-top: 40px;
-            padding: 18px 50px;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            text-decoration: none;
-            font-family: 'Space Grotesk';
-            font-weight: 700;
-            border-radius: 4px;
-            transition: 0.3s;
-            font-size: 1.1rem;
-        }
-        .contact-btn:hover {
-            background: rgba(45, 226, 230, 0.12);
-            box-shadow: 0 0 30px rgba(45, 226, 230, 0.2);
-            transform: translateY(-5px);
-        }
-
-        .back-to-top {
-            position: fixed;
-            right: 28px;
-            bottom: 28px;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-            background: rgba(15, 20, 28, 0.7);
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(10px);
-            transition: 0.3s;
-            z-index: 150;
-        }
-        .back-to-top.visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-        }
-        .back-to-top:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            box-shadow: 0 0 18px var(--glow);
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 179, 71, 0.6); }
-            70% { transform: scale(1.15); box-shadow: 0 0 0 10px rgba(255, 179, 71, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 179, 71, 0); }
-        }
-
-        body.reduced-motion .cursor,
-        body.reduced-motion .cursor-dot,
-        body.no-custom-cursor .cursor,
-        body.no-custom-cursor .cursor-dot {
-            display: none;
-        }
-        body.reduced-motion .status-dot {
-            animation: none;
-        }
-        body.reduced-motion *,
-        body.no-custom-cursor * {
-            cursor: auto;
-        }
-
-        /* Responsive Media Queries */
-        @media (hover: none) and (pointer: coarse) {
-            .cursor, .cursor-dot { display: none; }
-            * { cursor: auto; }
-        }
-        @media (max-width: 1024px) {
-            nav { padding: 20px 32px; }
-            .nav-links { gap: 22px; }
-            .btn-resume, .btn-download { padding: 10px 18px; font-size: 0.75rem; }
-            .btn-download { display: none; }
-
-            #about, #hero { padding-top: 120px; }
-            .glitch-name { font-size: 4rem; }
-            .typewriter { font-size: 2rem; height: 42px; }
-            .hero-desc { font-size: 1rem; }
-        }
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hamburger { display: block; }
-            
-            .glitch-name { font-size: 3rem; }
-            nav { padding: 20px 30px; }
-            
-            .timeline::before { left: 20px; }
-            .timeline-item { margin-left: 50px; }
-            .timeline-item::before { left: -36px; }
-            
-            #about, #hero { align-items: flex-start; text-align: left; padding-left: 10px; }
-            .hero-desc { text-align: left; }
-            .hero-stats { width: 100%; }
-            .stat { flex: 1 1 150px; }
-            .project-filters { justify-content: flex-start; }
-            .back-to-top { right: 18px; bottom: 18px; }
-            
-            .cursor, .cursor-dot { display: none; } 
-            * { cursor: auto; }
-            
-            h2 { font-size: 2.2rem; }
-            h2::after { display: none; }
-        }
-        @media (max-width: 600px) {
-            #about, #hero { padding-top: 110px; }
-            .hero-badges { max-width: 100%; }
-            .glitch-name { font-size: 2.8rem; }
-            .typewriter { font-size: 1.6rem; height: 36px; }
-            .hero-stats { gap: 12px; }
-            .stat { flex: 1 1 100%; }
-            .project-card { padding: 28px 22px; }
-            .projects-grid { grid-template-columns: 1fr; }
-            .filter-chip { font-size: 0.65rem; padding: 7px 12px; }
-        }
-    </style>
+/* Mobile */
+.mobile-toggle{display:none;background:none;border:none;color:var(--text-dim);font-size:14px;padding:8px 12px;}
+@media (max-width:860px){
+  .editor{margin:14px;border-radius:8px;}
+  .sidebar{
+    position:fixed;top:0;left:-260px;height:100%;width:240px;z-index:80;
+    transition:.35s; box-shadow:20px 0 40px rgba(0,0,0,.5);
+  }
+  .sidebar.open{left:0;}
+  .mobile-toggle{display:inline-flex;align-items:center;}
+  .filesection{padding:26px 20px 4px;}
+  .h1{font-size:1.5rem;}
+  .gutter{width:20px;}
+}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+  .blink-cursor{animation:none;}
+  .status-chip .blip{animation:none;}
+}
+</style>
 </head>
 <body>
 
-    <div class="scroll-progress"></div>
+<div class="editor">
+  <div class="titlebar">
+    <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+    <button class="mobile-toggle" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+    <div class="titlebar-path">mayank@bengaluru: ~/resume</div>
+    <div class="titlebar-actions"><i class="fa-regular fa-window-minimize"></i><i class="fa-regular fa-square"></i></div>
+  </div>
 
-    <!-- Custom Cursor -->
-    <div class="cursor"></div>
-    <div class="cursor-dot"></div>
+  <div class="tabbar" id="tabbar">
+    <div class="tab active" data-target="about"><i class="fa-solid fa-file-lines"></i> about.md</div>
+    <div class="tab" data-target="education"><i class="fa-solid fa-file-code"></i> education.yml</div>
+    <div class="tab" data-target="experience"><i class="fa-solid fa-file-lines"></i> experience.log</div>
+    <div class="tab" data-target="projects"><i class="fa-solid fa-folder-open"></i> projects/</div>
+    <div class="tab" data-target="skills"><i class="fa-solid fa-file-code"></i> skills.json</div>
+    <div class="tab" data-target="achievements"><i class="fa-solid fa-file-lines"></i> achievements.txt</div>
+    <div class="tab" data-target="contact"><i class="fa-solid fa-terminal"></i> contact.sh</div>
+  </div>
 
-    <!-- 3D Background -->
-    <div id="canvas-container"></div>
-    <div class="vignette"></div>
+  <div class="body-wrap">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-title">Explorer</div>
+      <div class="explorer-item active" data-target="about"><i class="fa-solid fa-file-lines"></i> about.md</div>
+      <div class="explorer-item" data-target="education"><i class="fa-solid fa-file-code"></i> education.yml</div>
+      <div class="explorer-item" data-target="experience"><i class="fa-solid fa-file-lines"></i> experience.log</div>
+      <div class="explorer-item" data-target="projects"><i class="fa-solid fa-folder-open"></i> projects/</div>
+      <div class="explorer-item" data-target="skills"><i class="fa-solid fa-file-code"></i> skills.json</div>
+      <div class="explorer-item" data-target="achievements"><i class="fa-solid fa-file-lines"></i> achievements.txt</div>
+      <div class="explorer-item" data-target="contact"><i class="fa-solid fa-terminal"></i> contact.sh</div>
+      <div class="sidebar-foot">
+        <div class="status-chip"><span class="blip"></span> open to work</div>
+      </div>
+    </aside>
 
-    <!-- Navbar -->
-    <nav aria-label="Primary">
-        <a href="#about" class="logo hover-target">Mayank <span>Raj</span></a>
-        
-        <!-- Desktop Menu -->
-        <ul class="nav-links">
-            <li><a href="#about" class="hover-target">About</a></li>
-            <li><a href="#experience" class="hover-target">Experience</a></li>
-            <li><a href="#projects" class="hover-target">Projects</a></li>
-            <li><a href="#github" class="hover-target">GitHub</a></li>
-            <li><a href="#contact" class="hover-target">Contact</a></li>
-            <li><a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" class="btn-resume hover-target" id="resume-btn-desktop" target="_blank" rel="noopener">Resume</a></li>
-            <li><a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" class="btn-download hover-target" id="resume-download-desktop" download>Download</a></li>
-        </ul>
+    <main class="pane">
 
-        <!-- Mobile Hamburger -->
-        <button class="hamburger hover-target" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" type="button">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </button>
-    </nav>
+      <!-- ABOUT -->
+      <section class="filesection" id="about">
+        <div class="line reveal"><span class="gutter">1</span><span class="code h1">Mayank Raj</span></div>
+        <div class="line reveal"><span class="gutter">2</span><span class="code h2sub">&gt; Robotics &amp; AI Engineer · Full Stack Developer<span class="blink-cursor"></span></span></div>
+        <div class="line reveal"><span class="gutter">3</span><span class="code"></span></div>
+        <div class="line reveal"><span class="gutter">4</span><span class="code"><span class="key">location</span>: <span class="str">Bengaluru, IN</span></span></div>
+        <div class="line reveal"><span class="gutter">5</span><span class="code"><span class="key">status</span>: <span class="str">open to work — fresher roles</span></span></div>
+        <div class="line reveal"><span class="gutter">6</span><span class="code"><span class="key">focus</span>: <span class="kw">[</span><span class="str">Full Stack</span>, <span class="str">Backend</span>, <span class="str">AI/DevOps</span>, <span class="str">Data Analytics</span><span class="kw">]</span></span></div>
+        <div class="line reveal"><span class="gutter">7</span><span class="code"></span></div>
+        <div class="line reveal"><span class="gutter">8</span><span class="code cmt">// Robotics &amp; AI graduate who bridges hardware thinking with</span></div>
+        <div class="line reveal"><span class="gutter">9</span><span class="code cmt">// production-grade web systems. Comfortable owning a feature</span></div>
+        <div class="line reveal"><span class="gutter">10</span><span class="code cmt">// end-to-end — from API to UI to deploy.</span></div>
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu" id="mobile-menu">
-        <a href="#about" class="mobile-link">About</a>
-        <a href="#experience" class="mobile-link">Experience</a>
-        <a href="#projects" class="mobile-link">Projects</a>
-        <a href="#github" class="mobile-link">GitHub</a>
-        <a href="#contact" class="mobile-link">Contact</a>
-        <a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" class="btn-resume mobile-link" id="resume-btn-mobile" target="_blank" rel="noopener">Resume</a>
-        <a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" class="btn-download mobile-link" id="resume-download-mobile" download>Download CV</a>
-    </div>
+        <div class="stat-row reveal">
+          <div class="stat-box"><span class="num" data-stat="repos">25+</span><span class="lbl">Public repos</span></div>
+          <div class="stat-box"><span class="num">500+</span><span class="lbl">DSA problems solved</span></div>
+          <div class="stat-box"><span class="num">2</span><span class="lbl">Certifications</span></div>
+          <div class="stat-box"><span class="num">1+</span><span class="lbl">Open source PRs</span></div>
+        </div>
 
-    <main>
-        <!-- Hero -->
-        <section id="about">
-            <div class="hero-pre">Hi, my name is</div>
-            <h1 class="glitch-name">Mayank Raj</h1>
-            <div class="hero-badges">
-                <div class="hero-pill status-pill"><span class="status-dot"></span> Open to work</div>
-                <div class="hero-pill location-pill"><i class="fas fa-map-marker-alt"></i> Bengaluru, IN</div>
+        <div class="pill-row reveal">
+          <span class="pill on">Bengaluru preferred</span>
+          <span class="pill">Remote-friendly</span>
+        </div>
+
+        <div class="social-row reveal">
+          <a href="https://github.com/MayankRaj435" target="_blank" rel="noopener" class="social-btn"><i class="fa-brands fa-github"></i> GitHub</a>
+          <a href="https://www.linkedin.com/in/mayank-raj-203534258/" target="_blank" rel="noopener" class="social-btn"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+          <a href="mailto:itsmayank435@gmail.com" class="social-btn"><i class="fa-solid fa-envelope"></i> Email</a>
+          <a href="https://drive.google.com/file/d/1wbhx02jfufKNofxtcd2tubkFuFPJ57gP/view?usp=drive_link" target="_blank" rel="noopener" class="social-btn primary"><i class="fa-solid fa-download"></i> Resume.pdf</a>
+        </div>
+      </section>
+
+      <!-- EDUCATION -->
+      <section class="filesection" id="education">
+        <div class="file-comment reveal"># education.yml</div>
+        <div class="line reveal"><span class="gutter">1</span><span class="code"><span class="key">degree</span>: <span class="str">B.E. Robotics &amp; Artificial Intelligence</span></span></div>
+        <div class="line reveal"><span class="gutter">2</span><span class="code"><span class="key">institute</span>: <span class="str">Bangalore Institute of Technology, Bengaluru</span></span></div>
+        <div class="line reveal"><span class="gutter">3</span><span class="code"><span class="key">duration</span>: <span class="str">Dec 2022 → Jun 2026</span></span></div>
+        <div class="line reveal"><span class="gutter">4</span><span class="code"><span class="key">cgpa</span>: <span class="str">8.6 / 10.0</span></span></div>
+        <div class="line reveal"><span class="gutter">5</span><span class="code"><span class="key">coursework</span>: <span class="kw">[</span><span class="str">Web Technologies</span>, <span class="str">Robotics</span>, <span class="str">AI/ML</span>, <span class="str">DSA</span><span class="kw">]</span></span></div>
+        <div class="line reveal"><span class="gutter">6</span><span class="code"><span class="key">activities</span>: <span class="str">Joint Secretary, Rotaract District 3191</span></span></div>
+      </section>
+
+      <!-- EXPERIENCE -->
+      <section class="filesection" id="experience">
+        <div class="file-comment reveal"># experience.log — reverse chronological</div>
+
+        <div class="exp-entry reveal">
+          <div class="exp-top">
+            <div>
+              <div class="exp-ts">[2026-03 → 2026-05]</div>
+              <div class="exp-role">Full Stack Developer Intern</div>
+              <div class="exp-org">Statslane</div>
             </div>
-            <div class="typewriter">I build <span id="typing-text"></span></div>
-            <p class="hero-desc">
-                I'm a Robotics Engineer and Full Stack Developer specializing in building scalable web applications and intelligent systems. I bridge the gap between hardware and software to create seamless digital experiences.
-            </p>
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-value" data-stat="repos">--</span>
-                    <span class="stat-label">Public repos</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value" data-stat="stars">--</span>
-                    <span class="stat-label">Total stars</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value" data-stat="followers">--</span>
-                    <span class="stat-label">Followers</span>
-                </div>
+            <span class="exp-type">Internship</span>
+          </div>
+          <div class="exp-detail">
+            <div class="exp-label">role</div>
+            <div class="exp-text">Worked across both the frontend and backend of the Statslane product, contributing to the full stack end-to-end.</div>
+          </div>
+          <div class="exp-detail">
+            <div class="exp-label">responsibilities</div>
+            <div class="exp-bullets">
+              <div>Designed the webpage and enhanced the UI for a more polished, attractive page layout</div>
+              <div>Styled components across the app to keep the interface consistent and production-ready</div>
+              <div>Implemented backend logic powering the product's core infrastructure</div>
             </div>
-            <div class="social-links">
-                <a href="#" id="github-hero" class="social-icon hover-target" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="#" id="linkedin-hero" class="social-icon hover-target" target="_blank"><i class="fab fa-linkedin"></i></a>
-                <a href="mailto:itsmayank435@gmail.com" class="social-icon hover-target"><i class="fas fa-envelope"></i></a>
+          </div>
+          <div class="exp-tags">
+            <span>Next.js</span><span>React.js</span><span>Express.js</span><span>Node.js</span><span>Material UI</span><span>Tailwind CSS</span>
+          </div>
+        </div>
+
+        <div class="exp-entry reveal">
+          <div class="exp-top">
+            <div>
+              <div class="exp-ts">[2024-07 → 2025-06]</div>
+              <div class="exp-role">Joint Secretary</div>
+              <div class="exp-org">Rotaract District 3191</div>
             </div>
-        </section>
-
-        <!-- Experience -->
-        <section id="experience">
-            <h2>Where I've Worked</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-date">July 2024 – June 2025</div>
-                    <h3 class="timeline-title">Joint Secretary</h3>
-                    <span class="timeline-company">Rotaract District 3191</span>
-                    <p>Managed club records for 50+ members and planned 10+ inter-club events, improving coordination efficiency by 30%. Spearheaded digital transformation of club records.</p>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">April 2024 - July 2024</div>
-                    <h3 class="timeline-title">Data Mining Intern</h3>
-                    <span class="timeline-company">Medivirt Labs</span>
-                    <p>Conducted thorough research and compiled comprehensive profiles of 300+ healthcare professionals. Utilized specialized online databases resulting in a 25% increase in data quality for analysis.</p>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-date">Dec 2022 – Present</div>
-                    <h3 class="timeline-title">BE in Robotics & AI</h3>
-                    <span class="timeline-company">Bangalore Institute of Technology</span>
-                    <p>Maintaining a GPA of 8.7/10.0. Focusing on Web Technologies.</p>
-                </div>
+            <span class="exp-type">Leadership</span>
+          </div>
+          <div class="exp-detail">
+            <div class="exp-label">responsibilities</div>
+            <div class="exp-bullets">
+              <div>Managed club records for 50+ members and planned 10+ inter-club events</div>
+              <div>Improved coordination efficiency by ~30% via a digital records overhaul</div>
             </div>
-        </section>
+          </div>
+          <div class="exp-tags">
+            <span>Event Management</span><span>Digital Records</span><span>Team Coordination</span>
+          </div>
+        </div>
 
-        <!-- Projects -->
-        <section id="projects">
-            <h2>Some Things I've Built</h2>
-            <div class="project-filters" id="project-filters"></div>
-            <div class="projects-grid" id="projects-grid">
-                <div class="project-card hover-target">
-                    <i class="far fa-folder folder-icon"></i>
-                    <h3 class="project-title">Loading latest repositories...</h3>
-                    <p class="project-desc">Fetching your most recently updated GitHub projects.</p>
-                </div>
+        <div class="exp-entry reveal">
+          <div class="exp-top">
+            <div>
+              <div class="exp-ts">[2024-04 → 2024-07]</div>
+              <div class="exp-role">Data Mining Intern</div>
+              <div class="exp-org">Medivirt Labs</div>
             </div>
-        </section>
-
-        <!-- Skills -->
-        <section id="skills">
-            <h2>Technical Arsenal</h2>
-            <div class="skills-wrapper">
-                <div class="skill-box"><i class="fab fa-js"></i> JavaScript</div>
-                <div class="skill-box"><i class="fab fa-python"></i> Python</div>
-                <div class="skill-box"><i class="fas fa-code"></i> C++</div>
-                <div class="skill-box"><i class="fas fa-code"></i> C</div>
-                <div class="skill-box"><i class="fas fa-database"></i> SQL</div>
-
-                <div class="skill-box"><i class="fab fa-node"></i> Node.js</div>
-                <div class="skill-box"><i class="fas fa-network-wired"></i> Express.js</div>
-                <div class="skill-box"><i class="fab fa-react"></i> React.js</div>
-
-                <div class="skill-box"><i class="fab fa-docker"></i> Docker</div>
-                <div class="skill-box"><i class="fas fa-cubes"></i> Kubernetes</div>
-                <div class="skill-box"><i class="fab fa-git-alt"></i> Git</div>
-                <div class="skill-box"><i class="fas fa-database"></i> Supabase</div>
-                <div class="skill-box"><i class="fas fa-database"></i> MySQL</div>
-                <div class="skill-box"><i class="fas fa-database"></i> MongoDB</div>
-
-                <div class="skill-box"><i class="fab fa-aws"></i> AWS</div>
-                <div class="skill-box"><i class="fab fa-linux"></i> Linux</div>
-                <div class="skill-box"><i class="fas fa-globe"></i> Web</div>
-                <div class="skill-box"><i class="fab fa-windows"></i> Windows</div>
+            <span class="exp-type">Internship</span>
+          </div>
+          <div class="exp-detail">
+            <div class="exp-label">responsibilities</div>
+            <div class="exp-bullets">
+              <div>Compiled comprehensive profiles for 300+ healthcare professionals</div>
+              <div>Lifted data quality ~25% using specialized sourcing and verification</div>
             </div>
-        </section>
+          </div>
+          <div class="exp-tags">
+            <span>Research</span><span>Data Verification</span><span>Healthcare Databases</span>
+          </div>
+        </div>
+      </section>
 
-        <!-- GitHub Activity -->
-        <section id="github">
-            <h2>GitHub Activity</h2>
-            <div class="activity-grid">
-                <div class="activity-card">
-                    <span class="activity-value" data-activity="commits">--</span>
-                    <span class="activity-label">Total commits (public)</span>
-                </div>
-                <div class="activity-card">
-                    <span class="activity-value" data-activity="prs">--</span>
-                    <span class="activity-label">Total PRs (public)</span>
-                </div>
-            </div>
-            <p class="activity-note">Live from GitHub public API. Totals exclude private contributions.</p>
-        </section>
+      <!-- PROJECTS -->
+      <section class="filesection" id="projects">
+        <div class="file-comment reveal">$ ls -la projects/</div>
+        <div class="proj-grid reveal" id="proj-grid">
+          <div class="proj-card">
+            <div class="proj-name"><span>saas-sentry</span><span style="display:flex;gap:10px;"><a href="https://github.com/MayankRaj435" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a></span></div>
+            <div class="proj-desc">AWS resource &amp; cost monitoring platform with secure authentication, real-time dashboards, and smart usage alerts.</div>
+            <div class="proj-tags"><span>TypeScript</span><span>AWS</span><span>Prisma</span></div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-name"><span>gesturely</span><span style="display:flex;gap:10px;"><a href="https://github.com/MayankRaj435" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a></span></div>
+            <div class="proj-desc">Real-time system that recognizes American Sign Language hand gestures using computer vision and deep learning.</div>
+            <div class="proj-tags"><span>Python</span><span>Computer Vision</span><span>Deep Learning</span></div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-name"><span>rag-news-chatbot</span><span style="display:flex;gap:10px;"><a href="https://github.com/MayankRaj435" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a></span></div>
+            <div class="proj-desc">RAG-powered chatbot that answers questions from a dynamic, continuously stored knowledge base of real news.</div>
+            <div class="proj-tags"><span>Python</span><span>RAG</span><span>LLM</span></div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-name"><span>crowdqueue</span><span style="display:flex;gap:10px;"><a href="https://github.com/MayankRaj435" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a></span></div>
+            <div class="proj-desc">Real-time virtual queue management system built on the MERN stack with Redis, BullMQ and Socket.io.</div>
+            <div class="proj-tags"><span>MongoDB</span><span>Redis</span><span>Docker</span></div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-name"><span>smart-bookmarks</span><span style="display:flex;gap:10px;"><a href="https://github.com/MayankRaj435" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a></span></div>
+            <div class="proj-desc">A smarter bookmark manager that organizes, tags, and resurfaces saved links so nothing gets lost in a pile of tabs.</div>
+            <div class="proj-tags"><span>JavaScript</span><span>Chrome Extension</span><span>Productivity</span></div>
+          </div>
+          <div class="proj-card">
+            <div class="proj-name"><span>boa (contribution)</span><span style="display:flex;gap:10px;"><a href="https://github.com/boa-dev/boa/pull/5037" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a></span></div>
+            <div class="proj-desc">Contributed a TypedArray casting performance optimization to Boa, an embeddable JavaScript engine written in Rust.</div>
+            <div class="proj-tags"><span>Rust</span><span>Open Source</span><span>Performance</span></div>
+          </div>
+        </div>
+        <div style="margin-top:14px;" class="reveal">
+          <a href="https://github.com/MayankRaj435" target="_blank" rel="noopener" class="social-btn"><i class="fa-brands fa-github"></i> View all repos on GitHub</a>
+        </div>
+      </section>
 
-        <!-- Contact -->
-        <section id="contact">
-            <div class="hero-pre">What's Next?</div>
-            <h2 class="contact-title">Get In Touch</h2>
-            <p class="hero-desc contact-desc">
-                I am currently looking for remote internship or full-time opportunities. Whether you have a question or just want to say hi, my inbox is always open.
-            </p>
-            <a href="mailto:itsmayank435@gmail.com" class="contact-btn hover-target">Connect with Me</a>
-        </section>
+      <!-- SKILLS -->
+      <section class="filesection" id="skills">
+        <div class="file-comment reveal"># skills.json</div>
+        <div class="line reveal"><span class="gutter">1</span><span class="code kw">{</span></div>
+        <div class="line reveal"><span class="gutter">2</span><span class="code skill-block">&nbsp;&nbsp;<span class="skill-cat">"languages"</span>: <span class="kw">[</span><span class="skill-items">"JavaScript","TypeScript","Python","C++","C","SQL"</span><span class="kw">]</span>,</span></div>
+        <div class="line reveal"><span class="gutter">3</span><span class="code skill-block">&nbsp;&nbsp;<span class="skill-cat">"frontend"</span>: <span class="kw">[</span><span class="skill-items">"React.js","Next.js"</span><span class="kw">]</span>,</span></div>
+        <div class="line reveal"><span class="gutter">4</span><span class="code skill-block">&nbsp;&nbsp;<span class="skill-cat">"backend"</span>: <span class="kw">[</span><span class="skill-items">"Node.js","Express.js"</span><span class="kw">]</span>,</span></div>
+        <div class="line reveal"><span class="gutter">5</span><span class="code skill-block">&nbsp;&nbsp;<span class="skill-cat">"databases"</span>: <span class="kw">[</span><span class="skill-items">"MongoDB","MySQL","Supabase"</span><span class="kw">]</span>,</span></div>
+        <div class="line reveal"><span class="gutter">6</span><span class="code skill-block">&nbsp;&nbsp;<span class="skill-cat">"infra"</span>: <span class="kw">[</span><span class="skill-items">"AWS","Docker","Kubernetes","Linux","Git"</span><span class="kw">]</span>,</span></div>
+        <div class="line reveal"><span class="gutter">7</span><span class="code skill-block">&nbsp;&nbsp;<span class="skill-cat">"ai_ml"</span>: <span class="kw">[</span><span class="skill-items">"PyTorch"</span><span class="kw">]</span></span></div>
+        <div class="line reveal"><span class="gutter">8</span><span class="code kw">}</span></div>
+      </section>
 
-        <footer style="text-align: center; padding: 20px; color: #666; font-size: 0.8rem; margin-bottom: 20px;">
-            <p>Designed & Built by Mayank Raj</p>
-        </footer>
+      <!-- ACHIEVEMENTS -->
+      <section class="filesection" id="achievements">
+        <div class="file-comment reveal"># achievements.txt</div>
+        <div class="ach-list reveal">
+          <div>JNCIA-Cloud certified</div>
+          <div>HackerRank SQL — Gold badge (670+ points)</div>
+          <div>500+ DSA problems solved across Striver's SDE Sheet</div>
+          <div>Open-source contributor — boa-dev/boa (JavaScript engine written in Rust)</div>
+          <div>GSoC 2026 — open-source contributions</div>
+        </div>
+        <div class="reveal" style="margin-top:20px;">
+          <a href="https://github.com/MayankRaj435" target="_blank" rel="noopener" class="social-btn"><i class="fa-brands fa-github"></i> Full activity on GitHub</a>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="filesection" id="contact">
+        <div class="file-comment reveal"># contact.sh</div>
+        <div class="reveal">
+          <div class="term-line"><span class="term-prompt">mayank@bengaluru:~$</span> echo $EMAIL</div>
+          <div class="term-out">itsmayank435@gmail.com</div>
+          <div class="term-line"><span class="term-prompt">mayank@bengaluru:~$</span> cat status.txt</div>
+          <div class="term-out">Actively looking for fresher SDE / Full Stack / Data / AI-DevOps roles.<br>Bengaluru preferred — open to remote opportunities.</div>
+        </div>
+        <div class="social-row reveal">
+          <a href="mailto:itsmayank435@gmail.com" class="social-btn primary"><i class="fa-solid fa-envelope"></i> Say hi</a>
+          <a href="https://github.com/MayankRaj435" target="_blank" rel="noopener" class="social-btn"><i class="fa-brands fa-github"></i> GitHub</a>
+          <a href="https://www.linkedin.com/in/mayank-raj-203534258/" target="_blank" rel="noopener" class="social-btn"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+        </div>
+        <footer class="done">designed &amp; built by Mayank Raj — compiled without errors ✓</footer>
+      </section>
+
     </main>
-
-    <button class="back-to-top hover-target" aria-label="Back to top" type="button">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
-
-    <script>
-        const links = {
-            github: "https://github.com/MayankRaj435",
-            linkedin: "https://www.linkedin.com/in/mayank-raj-203534258/",
-            resume: "Mayank_SE.pdf"
-        };
-
-        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const supportsFinePointer = window.matchMedia("(pointer: fine)").matches;
-        const enable3D = !prefersReducedMotion && window.innerWidth > 768;
-
-        if (prefersReducedMotion) {
-            document.body.classList.add('reduced-motion');
-            document.documentElement.style.scrollBehavior = 'auto';
-        }
-        if (!supportsFinePointer) {
-            document.body.classList.add('no-custom-cursor');
-        }
-
-        // Apply Links
-        document.getElementById('github-hero').href = links.github;
-        document.getElementById('linkedin-hero').href = links.linkedin;
-        document.getElementById('resume-btn-desktop').href = links.resume;
-        document.getElementById('resume-btn-mobile').href = links.resume;
-        document.getElementById('resume-download-desktop').href = links.resume;
-        document.getElementById('resume-download-mobile').href = links.resume;
-
-        // ========================================
-        // MOBILE MENU LOGIC
-        // ========================================
-        const hamburger = document.querySelector('.hamburger');
-        const mobileMenu = document.querySelector('.mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-
-        const setMenuState = (isOpen) => {
-            hamburger.classList.toggle('active', isOpen);
-            mobileMenu.classList.toggle('active', isOpen);
-            hamburger.setAttribute('aria-expanded', String(isOpen));
-        };
-
-        hamburger.addEventListener('click', () => {
-            const isOpen = hamburger.classList.contains('active');
-            setMenuState(!isOpen);
-        });
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => setMenuState(false));
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && mobileMenu.classList.contains('active')) {
-                setMenuState(false);
-            }
-        });
-
-        // ========================================
-        // SCROLL UI: PROGRESS + NAV + BACK TO TOP
-        // ========================================
-        const progressBar = document.querySelector('.scroll-progress');
-        const backToTop = document.querySelector('.back-to-top');
-        const nav = document.querySelector('nav');
-
-        const updateScrollUI = () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = docHeight > 0 ? (scrollTop / docHeight) : 0;
-
-            if (progressBar) {
-                progressBar.style.width = `${progress * 100}%`;
-            }
-            if (nav) {
-                nav.classList.toggle('scrolled', scrollTop > 50);
-            }
-            if (backToTop) {
-                backToTop.classList.toggle('visible', scrollTop > 500);
-            }
-        };
-
-        let scrollTicking = false;
-        const onScroll = () => {
-            if (scrollTicking) return;
-            scrollTicking = true;
-            requestAnimationFrame(() => {
-                updateScrollUI();
-                scrollTicking = false;
-            });
-        };
-
-        window.addEventListener('scroll', onScroll);
-        window.addEventListener('resize', onScroll);
-        updateScrollUI();
-
-        if (backToTop) {
-            backToTop.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
-            });
-        }
-
-        // ========================================
-        // ACTIVE NAV HIGHLIGHTING
-        // ========================================
-        const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
-        const sectionMap = new Map();
-
-        navLinks.forEach((link) => {
-            const targetId = link.getAttribute('href').replace('#', '');
-            const section = document.getElementById(targetId);
-            if (section) {
-                sectionMap.set(section, link);
-            }
-        });
-
-        if (sectionMap.size > 0) {
-            const sectionObserver = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach((link) => {
-                            link.classList.remove('active');
-                            link.removeAttribute('aria-current');
-                        });
-                        const activeLink = sectionMap.get(entry.target);
-                        if (activeLink) {
-                            activeLink.classList.add('active');
-                            activeLink.setAttribute('aria-current', 'page');
-                        }
-                    }
-                });
-            }, { rootMargin: '-40% 0px -55% 0px' });
-
-            sectionMap.forEach((link, section) => sectionObserver.observe(section));
-        }
-
-        // ========================================
-        // GITHUB DATA (PROJECTS + STATS)
-        // ========================================
-        const githubUser = "MayankRaj435";
-        const repoLimit = 6;
-        const preferredRepoNames = ["rag", "crowdqueue"];
-        const excludedRepoNames = ["codsoft"];
-        const repoFilters = {
-            excludeForks: true,
-            excludeArchived: true,
-            excludeProfileRepo: true
-        };
-
-        const githubHeaders = {
-            Accept: "application/vnd.github+json, application/vnd.github.mercy-preview+json",
-            "X-GitHub-Api-Version": "2022-11-28"
-        };
-        const githubCommitHeaders = {
-            Accept: "application/vnd.github+json, application/vnd.github.cloak-preview+json",
-            "X-GitHub-Api-Version": "2022-11-28"
-        };
-
-        const formatNumber = (value) => new Intl.NumberFormat('en-US').format(value);
-        const setText = (el, value) => {
-            if (el) el.textContent = value;
-        };
-
-        const fetchGithubJson = async (url, headers = githubHeaders) => {
-            const response = await fetch(url, { headers });
-            if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
-            return response.json();
-        };
-
-        const animateCount = (el, target) => {
-            const duration = 1200;
-            const startTime = performance.now();
-
-            const step = (now) => {
-                const progress = Math.min((now - startTime) / duration, 1);
-                const current = Math.round(target * progress);
-                el.textContent = formatNumber(current);
-                if (progress < 1) requestAnimationFrame(step);
-            };
-
-            requestAnimationFrame(step);
-        };
-
-        const observeCountUp = (el, value) => {
-            if (!el) return;
-            if (prefersReducedMotion) {
-                el.textContent = formatNumber(value);
-                return;
-            }
-
-            const observer = new IntersectionObserver((entries, obs) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        animateCount(entry.target, value);
-                        obs.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.6 });
-
-            observer.observe(el);
-        };
-
-        const updateHeroStats = (stats) => {
-            const statEls = document.querySelectorAll('.stat-value[data-stat]');
-            statEls.forEach((el) => {
-                const key = el.dataset.stat;
-                if (stats[key] === undefined) return;
-                observeCountUp(el, stats[key]);
-            });
-        };
-
-        const updateActivityStats = (stats) => {
-            const activityEls = document.querySelectorAll('.activity-value[data-activity]');
-            activityEls.forEach((el) => {
-                const key = el.dataset.activity;
-                if (stats[key] === undefined) return;
-                observeCountUp(el, stats[key]);
-            });
-        };
-
-        const normalizeTag = (value) => (value ? value.toLowerCase() : 'other');
-        const getRecencyScore = (pushedAt) => {
-            if (!pushedAt) return 0;
-            const now = Date.now();
-            const pushedTime = new Date(pushedAt).getTime();
-            const daysAgo = (now - pushedTime) / (1000 * 60 * 60 * 24);
-            if (daysAgo <= 30) return 6;
-            if (daysAgo <= 90) return 4;
-            if (daysAgo <= 180) return 2;
-            return 0;
-        };
-        const scoreRepo = (repo) => {
-            const stars = repo.stargazers_count || 0;
-            const forks = repo.forks_count || 0;
-            const watchers = repo.watchers_count || 0;
-            const issues = repo.open_issues_count || 0;
-            const size = repo.size || 0;
-            const topics = repo.topics ? repo.topics.length : 0;
-            const hasDemo = repo.homepage ? 2 : 0;
-            return (
-                stars * 5 +
-                forks * 4 +
-                watchers * 2 +
-                issues * 0.5 +
-                size / 50 +
-                topics * 2 +
-                getRecencyScore(repo.pushed_at) +
-                hasDemo
-            );
-        };
-
-        const pickFeaturedRepos = (repos) => {
-            const scored = [...repos].sort((a, b) => scoreRepo(b) - scoreRepo(a));
-            const preferred = [];
-            const used = new Set();
-
-            preferredRepoNames.forEach((slug) => {
-                const match = scored.find((repo) => repo.name.toLowerCase().includes(slug));
-                if (match && !used.has(match.id)) {
-                    preferred.push(match);
-                    used.add(match.id);
-                }
-            });
-
-            const remaining = scored.filter((repo) => !used.has(repo.id));
-            return [...preferred, ...remaining].slice(0, repoLimit);
-        };
-
-        const buildProjectCard = (repo) => {
-            const card = document.createElement('div');
-            card.className = 'project-card hover-target';
-
-            const language = repo.language || 'Other';
-            const updatedAt = repo.pushed_at ? new Date(repo.pushed_at) : null;
-            const updatedLabel = updatedAt
-                ? updatedAt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
-                : 'Unknown';
-            const description = repo.description || 'No description yet.';
-            const title = repo.name.replace(/-/g, ' ');
-
-            const topics = repo.topics ? repo.topics.slice(0, 3) : [];
-            const tags = [language, ...topics].map(normalizeTag);
-            card.dataset.tags = tags.join(',');
-
-            const homepageLink = repo.homepage
-                ? `<a href="${repo.homepage}" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i></a>`
-                : '';
-
-            card.innerHTML = `
-                <div class="project-links">
-                    <a href="${repo.html_url}" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
-                    ${homepageLink}
-                </div>
-                <i class="far fa-folder folder-icon"></i>
-                <h3 class="project-title">${title}</h3>
-                <p class="project-desc">${description}</p>
-                <div class="tech-stack">
-                    <span class="tech-tag">${language}</span>
-                    ${topics.map((topic) => `<span class="tech-tag">${topic}</span>`).join('')}
-                    <span class="tech-tag">★ ${formatNumber(repo.stargazers_count)}</span>
-                    <span class="tech-tag">Updated ${updatedLabel}</span>
-                </div>
-            `;
-
-            return card;
-        };
-
-        const renderProjects = (repos) => {
-            const grid = document.getElementById('projects-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-
-            if (!repos.length) {
-                grid.innerHTML = `
-                    <div class="project-card hover-target">
-                        <i class="far fa-folder folder-icon"></i>
-                        <h3 class="project-title">No public repositories yet</h3>
-                        <p class="project-desc">Publish a repo on GitHub and it will appear here automatically.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            repos.forEach((repo) => grid.appendChild(buildProjectCard(repo)));
-        };
-
-        const renderFilters = (repos) => {
-            const filterContainer = document.getElementById('project-filters');
-            if (!filterContainer) return;
-
-            const languages = repos.map((repo) => repo.language).filter(Boolean);
-            const uniqueLanguages = [...new Set(languages)];
-            const hasOther = repos.some((repo) => !repo.language);
-
-            const filters = [
-                { label: 'All', value: 'all' },
-                ...uniqueLanguages.map((language) => ({
-                    label: language,
-                    value: language.toLowerCase()
-                })),
-                ...(hasOther ? [{ label: 'Other', value: 'other' }] : [])
-            ];
-
-            filterContainer.innerHTML = filters.map((filter, index) => (
-                `<button class="filter-chip hover-target ${index === 0 ? 'active' : ''}" data-filter="${filter.value}" type="button">${filter.label}</button>`
-            )).join('');
-
-            const applyFilter = (filter) => {
-                const cards = document.querySelectorAll('#projects-grid .project-card');
-                cards.forEach((card) => {
-                    const tagList = card.dataset.tags ? card.dataset.tags.split(',') : [];
-                    const matches = filter === 'all' || tagList.includes(filter);
-                    card.classList.toggle('is-hidden', !matches);
-                });
-            };
-
-            filterContainer.querySelectorAll('.filter-chip').forEach((button) => {
-                button.addEventListener('click', () => {
-                    filterContainer.querySelectorAll('.filter-chip').forEach((btn) => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    applyFilter(button.dataset.filter);
-                });
-            });
-        };
-
-        const loadGitHubData = async () => {
-            try {
-                const user = await fetchGithubJson(`https://api.github.com/users/${githubUser}`);
-                const repoPages = Math.max(1, Math.ceil(user.public_repos / 100));
-                const repoRequests = [];
-
-                for (let page = 1; page <= repoPages; page += 1) {
-                    repoRequests.push(fetchGithubJson(
-                        `https://api.github.com/users/${githubUser}/repos?per_page=100&sort=pushed&page=${page}`
-                    ));
-                }
-
-                const allRepos = (await Promise.all(repoRequests)).flat();
-                const totalStars = allRepos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
-
-                updateHeroStats({
-                    repos: user.public_repos,
-                    stars: totalStars,
-                    followers: user.followers
-                });
-
-                const filteredRepos = allRepos.filter((repo) => {
-                    if (excludedRepoNames.some((slug) => repo.name.toLowerCase().includes(slug))) return false;
-                    if (repoFilters.excludeForks && repo.fork) return false;
-                    if (repoFilters.excludeArchived && repo.archived) return false;
-                    if (repoFilters.excludeProfileRepo && repo.name.toLowerCase() === githubUser.toLowerCase()) return false;
-                    return true;
-                });
-
-                const sortedRepos = pickFeaturedRepos(filteredRepos);
-
-                renderProjects(sortedRepos);
-                renderFilters(sortedRepos);
-                initTilt();
-            } catch (error) {
-                console.error('GitHub data load failed:', error);
-            }
-
-            try {
-                const [commits, prs] = await Promise.all([
-                    fetchGithubJson(
-                        `https://api.github.com/search/commits?q=author:${githubUser}`,
-                        githubCommitHeaders
-                    ),
-                    fetchGithubJson(
-                        `https://api.github.com/search/issues?q=author:${githubUser}+type:pr`
-                    )
-                ]);
-
-                updateActivityStats({
-                    commits: commits.total_count || 0,
-                    prs: prs.total_count || 0
-                });
-            } catch (error) {
-                console.error('GitHub activity load failed:', error);
-            }
-        };
-
-        loadGitHubData();
-
-        // ========================================
-        // INTERACTIVE CURSOR
-        // ========================================
-        const cursor = document.querySelector('.cursor');
-        const cursorDot = document.querySelector('.cursor-dot');
-        const hoverTargets = document.querySelectorAll('.hover-target');
-
-        if (!prefersReducedMotion && supportsFinePointer && cursor && cursorDot) {
-            document.addEventListener('mousemove', (e) => {
-                cursorDot.style.left = e.clientX + 'px';
-                cursorDot.style.top = e.clientY + 'px';
-
-                setTimeout(() => {
-                    cursor.style.left = e.clientX + 'px';
-                    cursor.style.top = e.clientY + 'px';
-                }, 50);
-            });
-
-            hoverTargets.forEach(target => {
-                target.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-                target.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-            });
-        }
-
-        // ========================================
-        // 3D BACKGROUND
-        // ========================================
-        let torusKnot = null;
-        let camera = null;
-        let particlesMesh = null;
-        let renderer = null;
-
-        if (enable3D) {
-            const scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-            const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-            const material = new THREE.MeshBasicMaterial({
-                color: 0x2de2e6,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.15
-            });
-            torusKnot = new THREE.Mesh(geometry, material);
-            scene.add(torusKnot);
-
-            const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 700;
-            const posArray = new Float32Array(particlesCount * 3);
-
-            for (let i = 0; i < particlesCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 50;
-            }
-
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            const particlesMaterial = new THREE.PointsMaterial({
-                size: 0.05,
-                color: 0xffb347,
-                transparent: true,
-                opacity: 0.7
-            });
-            particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particlesMesh);
-
-            camera.position.z = 30;
-
-            const clock = new THREE.Clock();
-
-            const animate = () => {
-                const elapsedTime = clock.getElapsedTime();
-
-                torusKnot.rotation.y = elapsedTime * 0.1;
-                particlesMesh.rotation.y = elapsedTime * 0.05;
-                particlesMesh.rotation.x = elapsedTime * -0.02;
-
-                renderer.render(scene, camera);
-                requestAnimationFrame(animate);
-            };
-            animate();
-
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-        }
-
-        // ========================================
-        // SCROLL ANIMATIONS (GSAP)
-        // ========================================
-        if (!prefersReducedMotion) {
-            gsap.registerPlugin(ScrollTrigger);
-
-            gsap.from(".hero-pre, .hero-badges, .glitch-name, .typewriter, .hero-desc, .hero-stats, .social-links", {
-                opacity: 0,
-                y: 20,
-                duration: 1,
-                ease: "power3.out",
-                stagger: 0.12
-            });
-
-            const sections = document.querySelectorAll('section');
-            sections.forEach(section => {
-                gsap.fromTo(section,
-                    { opacity: 0, y: 50 },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        duration: 1,
-                        scrollTrigger: {
-                            trigger: section,
-                            start: "top 80%",
-                            end: "bottom 20%",
-                            toggleActions: "play none none reverse"
-                        }
-                    }
-                );
-            });
-
-            if (enable3D && torusKnot && camera) {
-                gsap.to(torusKnot.rotation, {
-                    x: 3,
-                    z: 2,
-                    scrollTrigger: {
-                        trigger: "body",
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: 1
-                    }
-                });
-
-                gsap.to(camera.position, {
-                    z: 15,
-                    y: -5,
-                    scrollTrigger: {
-                        trigger: "body",
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: 1
-                    }
-                });
-            }
-        }
-
-        // ========================================
-        // TYPEWRITER EFFECT
-        // ========================================
-        const typingText = document.getElementById('typing-text');
-        if (typingText) {
-            if (prefersReducedMotion) {
-                typingText.textContent = 'Intelligent Systems.';
-            } else {
-                new Typewriter('#typing-text', {
-                    strings: [
-                        'Intelligent Systems.',
-                        'Scalable Web Apps.',
-                        'Robotics Solutions.',
-                        'AI-Powered Tools.'
-                    ],
-                    autoStart: true,
-                    loop: true,
-                    cursor: '|',
-                    delay: 50,
-                    deleteSpeed: 30,
-                });
-            }
-        }
-
-        // ========================================
-        // TILT EFFECT (CARDS)
-        // ========================================
-        function initTilt() {
-            if (prefersReducedMotion || !window.VanillaTilt) return;
-            VanillaTilt.init(document.querySelectorAll(".project-card"), {
-                max: 8,
-                speed: 400,
-                glare: true,
-                "max-glare": 0.2,
-                scale: 1.02
-            });
-        }
-
-        initTilt();
-
-    </script>
+  </div>
+
+  <div class="statusbar">
+    <div class="seg">
+      <span><i class="fa-solid fa-code-branch"></i> main</span>
+      <span><i class="fa-solid fa-check"></i> no errors</span>
+    </div>
+    <div class="seg">
+      <span id="statusFile">about.md</span>
+      <span id="statusPos">Ln 1, Col 1</span>
+      <span>UTF-8</span>
+      <span>JetBrains Mono</span>
+    </div>
+  </div>
+</div>
+
+<button class="back-top" id="backTop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- Mobile sidebar ---------- */
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebarToggle');
+sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+document.addEventListener('click', (e) => {
+  if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== sidebarToggle && !sidebarToggle.contains(e.target)) {
+    sidebar.classList.remove('open');
+  }
+});
+
+/* ---------- Tab / explorer navigation ---------- */
+const tabs = document.querySelectorAll('.tab');
+const explorerItems = document.querySelectorAll('.explorer-item');
+const sections = document.querySelectorAll('.filesection');
+const statusFile = document.getElementById('statusFile');
+
+function setActive(target){
+  tabs.forEach(t => t.classList.toggle('active', t.dataset.target === target));
+  explorerItems.forEach(t => t.classList.toggle('active', t.dataset.target === target));
+  statusFile.textContent = target + (target === 'projects' ? '/' : (target === 'contact' ? '.sh' : (target === 'skills' || target === 'education' ? '.' + (target === 'skills' ? 'json' : 'yml') : (target === 'experience' ? '.log' : '.md'))));
+}
+
+[...tabs, ...explorerItems].forEach(el => {
+  el.addEventListener('click', () => {
+    const target = document.getElementById(el.dataset.target);
+    if (target) target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
+    sidebar.classList.remove('open');
+  });
+});
+
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) setActive(entry.target.id);
+  });
+}, { rootMargin: '-30% 0px -55% 0px' });
+sections.forEach(s => sectionObserver.observe(s));
+
+/* ---------- Status bar line:col synced to scroll ---------- */
+const statusPos = document.getElementById('statusPos');
+function updateStatusPos(){
+  const doc = document.documentElement;
+  const scrollTop = doc.scrollTop || document.body.scrollTop;
+  const height = doc.scrollHeight - doc.clientHeight;
+  const pct = height > 0 ? scrollTop / height : 0;
+  const line = Math.max(1, Math.round(pct * 480));
+  const col = Math.max(1, Math.round((pct * 97) % 80) + 1);
+  statusPos.textContent = `Ln ${line}, Col ${col}`;
+}
+
+/* ---------- Back to top + scroll UI ---------- */
+const backTop = document.getElementById('backTop');
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    updateStatusPos();
+    backTop.classList.toggle('visible', window.scrollY > 500);
+    ticking = false;
+  });
+});
+backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' }));
+updateStatusPos();
+
+/* ---------- Reveal-on-scroll (GSAP) ---------- */
+if (!prefersReduced && window.gsap) {
+  gsap.registerPlugin(ScrollTrigger);
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    gsap.fromTo(el, { opacity: 0, y: 16 }, {
+      opacity: 1, y: 0, duration: 0.55, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 92%', toggleActions: 'play none none reverse' }
+    });
+  });
+} else {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+}
+
+/* ---------- Lightweight smooth-scroll easing for wheel input ---------- */
+if (!prefersReduced && window.matchMedia("(pointer:fine)").matches) {
+  let targetY = window.scrollY;
+  let currentY = window.scrollY;
+  let raf = null;
+  const damp = 0.11;
+
+  function loop(){
+    currentY += (targetY - currentY) * damp;
+    if (Math.abs(targetY - currentY) < 0.5) {
+      currentY = targetY;
+      window.scrollTo(0, currentY);
+      raf = null;
+      return;
+    }
+    window.scrollTo(0, currentY);
+    raf = requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) return;
+    e.preventDefault();
+    targetY = Math.min(Math.max(targetY + e.deltaY, 0), document.documentElement.scrollHeight - window.innerHeight);
+    if (!raf) raf = requestAnimationFrame(loop);
+  }, { passive: false });
+}
+
+/* ---------- GitHub live enhancement (best-effort, non-blocking) ----------
+   The page already renders fully with real, hand-verified data above.
+   This block ONLY tries to quietly upgrade the repo-count number if the
+   browser can reach api.github.com. If it can't (rate-limited, offline,
+   or fetch blocked by a sandboxed preview), nothing changes and nothing
+   breaks — there is no loading state and no error state to see. */
+const githubUser = "MayankRaj435";
+const fmt = n => new Intl.NumberFormat('en-US').format(n);
+
+async function enhanceRepoCount(){
+  try {
+    const res = await fetch(`https://api.github.com/users/${githubUser}`, {
+      headers: { Accept: "application/vnd.github+json" }
+    });
+    if (!res.ok) return; // rate-limited or blocked — keep static value, silently
+    const user = await res.json();
+    const el = document.querySelector('[data-stat="repos"]');
+    if (el && user.public_repos) el.textContent = fmt(user.public_repos) + '+';
+  } catch (e) {
+    // Sandboxed preview or offline — the baked-in "25+" stays as-is.
+  }
+}
+enhanceRepoCount();
+</script>
 </body>
 </html>
